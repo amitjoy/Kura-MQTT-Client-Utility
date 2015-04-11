@@ -11,9 +11,9 @@ The main motive of developing this application is to use Eclipse Kura's CRUD lik
 
 ### How do I get set up? ###
 
-* Install E4 Tooling, Jeeeyul Eclipse Theme Pack
+* Install E4 Tooling, Jeeeyul Eclipse Theme Pack and put OPAL SWT bundle in Target Platform 
 * Import all the projects
-* Dependencies: Jeeeyul Eclipse Theme Pack, Apache Commons IO
+* External Dependencies: Jeeeyul Eclipse Theme Pack, Apache Commons IO, Opal SWT
 * Run the Product
 
 ### Who do I talk to? ###
