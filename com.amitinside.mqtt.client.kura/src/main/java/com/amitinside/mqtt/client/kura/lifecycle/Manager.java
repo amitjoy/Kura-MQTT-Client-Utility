@@ -19,6 +19,5 @@ public class Manager {
 				.getCanonicalName());
 
 		appContext.applicationRunning();
-
 	}
 }

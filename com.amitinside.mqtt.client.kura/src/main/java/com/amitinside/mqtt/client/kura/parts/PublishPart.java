@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.mihalis.opal.utils.SWTGraphicUtil;
 
 import com.amitinside.e4.bundleresourceloader.IBundleResourceLoader;
 import com.amitinside.mqtt.client.KuraMQTTClient;
@@ -72,6 +73,9 @@ public final class PublishPart {
 
 	@PostConstruct
 	public void createContents(final Composite parent) {
+
+		SWTGraphicUtil.centerShell(parent.getShell());
+
 		final Composite composite = new Composite(parent, SWT.NULL);
 		composite.setLayout(new FillLayout());
 

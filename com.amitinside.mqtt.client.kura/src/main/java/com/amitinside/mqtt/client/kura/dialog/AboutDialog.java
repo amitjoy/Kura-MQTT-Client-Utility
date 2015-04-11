@@ -27,7 +27,6 @@ public class AboutDialog extends TitleAreaDialog {
 		final AboutDialog dialog = new AboutDialog(parent);
 		dialog.create();
 		if (dialog.open() == Window.OK) {
-
 		}
 	}
 

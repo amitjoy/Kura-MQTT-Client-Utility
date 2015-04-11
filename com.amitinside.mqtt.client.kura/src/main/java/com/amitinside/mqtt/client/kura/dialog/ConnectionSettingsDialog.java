@@ -50,7 +50,6 @@ public class ConnectionSettingsDialog extends TitleAreaDialog {
 			UISynchronize synchronize) {
 		final ConnectionSettingsDialog dialog = new ConnectionSettingsDialog(
 				shell, application, mqttClient, broker, synchronize);
-
 		dialog.create();
 
 		dialog.setMqttServerAddress(mqttClient.getHost());

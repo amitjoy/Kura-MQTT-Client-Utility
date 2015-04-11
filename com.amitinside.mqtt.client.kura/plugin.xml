@@ -15,10 +15,10 @@
                name="appName"
                value="Eclipse Kura MQTT Client">
          </property>
-         <!--property
+         <property
                name="lifeCycleURI"
                value="bundleclass://com.amitinside.mqtt.client.kura/com.amitinside.mqtt.client.kura.lifecycle.Manager">
-         </property-->
+         </property>
       </product>
    </extension>
 </plugin>
