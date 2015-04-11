@@ -32,6 +32,7 @@ import com.amitinside.mqtt.client.MessageListener;
 import com.amitinside.mqtt.client.kura.dialog.ConnectionSettingsDialog;
 import com.amitinside.mqtt.client.kura.events.KuraClientEventConstants;
 import com.amitinside.mqtt.client.kura.message.KuraPayload;
+import com.amitinside.mqtt.client.kura.util.FormUtil;
 import com.amitinside.mqtt.client.kura.util.PayloadUtil;
 import com.amitinside.swt.layout.grid.GridDataUtil;
 
@@ -121,7 +122,7 @@ public final class SubscribePart {
 		GridDataUtil.applyGridData(subscribeButton).horizontalSpan(2)
 				.horizontalAlignment(GridData.END);
 
-		form.getToolBarManager().add(new Action("Configure Connection") {
+		form.getToolBarManager().add(new Action("Connection") {
 
 			@Override
 			public void run() {
@@ -159,9 +160,11 @@ public final class SubscribePart {
 
 	private void defaultSetImage(Form form) {
 		if (mqttClient.isConnected()) {
-			safelySetToolbarImage("icons/online.png");
+			FormUtil.safelySetToolbarImage(form, uiSynchronize,
+					bundleResourceService, "icons/online.png");
 		} else
-			safelySetToolbarImage("icons/offline.png");
+			FormUtil.safelySetToolbarImage(form, uiSynchronize,
+					bundleResourceService, "icons/offline.png");
 	}
 
 	private void updateForm(final KuraPayload payload) {
@@ -181,23 +184,15 @@ public final class SubscribePart {
 	@Optional
 	public void updateUIWithClientIdAndConnectionStatus(
 			@UIEventTopic(KuraClientEventConstants.CONNECTED_EVENT_TOPIC) final Object message) {
-		safelySetToolbarImage("icons/online.png");
+		FormUtil.safelySetToolbarImage(form, uiSynchronize,
+				bundleResourceService, "icons/online.png");
 	}
 
 	@Inject
 	@Optional
 	public void updateUIWithConnectionStatus(
 			@UIEventTopic(KuraClientEventConstants.DISCONNECTED_EVENT_TOPIC) final Object message) {
-		safelySetToolbarImage("icons/offline.png");
-	}
-
-	private void safelySetToolbarImage(final String path) {
-		uiSynchronize.asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				form.setImage(bundleResourceService.loadImage(getClass(), path));
-			}
-		});
-
+		FormUtil.safelySetToolbarImage(form, uiSynchronize,
+				bundleResourceService, "icons/offline.png");
 	}
 }

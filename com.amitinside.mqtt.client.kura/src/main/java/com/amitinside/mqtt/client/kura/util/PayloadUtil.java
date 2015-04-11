@@ -9,7 +9,7 @@ import java.security.SecureRandom;
 import java.util.Map;
 import java.util.Properties;
 
-public class PayloadUtil {
+public final class PayloadUtil {
 
 	public static Properties parsePayloadFromString(String text) {
 		final Properties p = new Properties();

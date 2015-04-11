@@ -34,6 +34,7 @@ import com.amitinside.mqtt.client.KuraMQTTClient;
 import com.amitinside.mqtt.client.kura.dialog.ConnectionSettingsDialog;
 import com.amitinside.mqtt.client.kura.events.KuraClientEventConstants;
 import com.amitinside.mqtt.client.kura.message.KuraPayload;
+import com.amitinside.mqtt.client.kura.util.FormUtil;
 import com.amitinside.mqtt.client.kura.util.PayloadUtil;
 import com.amitinside.swt.layout.grid.GridDataUtil;
 
@@ -181,7 +182,7 @@ public final class PublishPart {
 		GridDataUtil.applyGridData(buttonPublish).horizontalSpan(2)
 				.horizontalAlignment(GridData.END);
 
-		form.getToolBarManager().add(new Action("Configure Connection") {
+		form.getToolBarManager().add(new Action("Connection") {
 			@Override
 			public void run() {
 				ConnectionSettingsDialog.openDialogBox(parent.getShell(),
@@ -195,9 +196,11 @@ public final class PublishPart {
 
 	private void defaultSetImage(Form form) {
 		if (mqttClient.isConnected()) {
-			safelySetToolbarImage("icons/online.png");
+			FormUtil.safelySetToolbarImage(form, uiSynchronize,
+					bundleResourceService, "icons/online.png");
 		} else
-			safelySetToolbarImage("icons/offline.png");
+			FormUtil.safelySetToolbarImage(form, uiSynchronize,
+					bundleResourceService, "icons/offline.png");
 	}
 
 	@Inject
@@ -222,16 +225,7 @@ public final class PublishPart {
 	@Optional
 	public void updateUIWithConnectionStatus(
 			@UIEventTopic(KuraClientEventConstants.DISCONNECTED_EVENT_TOPIC) final Object message) {
-		safelySetToolbarImage("icons/offline.png");
-	}
-
-	private void safelySetToolbarImage(final String path) {
-		uiSynchronize.asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				form.setImage(bundleResourceService.loadImage(getClass(), path));
-			}
-		});
-
+		FormUtil.safelySetToolbarImage(form, uiSynchronize,
+				bundleResourceService, "icons/offline.png");
 	}
 }

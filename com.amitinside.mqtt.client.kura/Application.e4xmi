@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <application:Application xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:advanced="http://www.eclipse.org/ui/2010/UIModel/application/ui/advanced" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmi:id="_6ctgQN7uEeSi-LhyoCOjzA" elementId="org.eclipse.e4.ide.application" bindingContexts="_6ctgSd7uEeSi-LhyoCOjzA">
-  <children xsi:type="basic:TrimmedWindow" xmi:id="_6ctgQd7uEeSi-LhyoCOjzA" elementId="com.amitinside.mqtt.client.kura" label="Eclipse Kura MQTT Client Utility" x="250" y="200" width="800" height="330">
+  <children xsi:type="basic:TrimmedWindow" xmi:id="_6ctgQd7uEeSi-LhyoCOjzA" elementId="com.amitinside.mqtt.client.kura" label="Eclipse Kura MQTT Client Utility" iconURI="" tooltip="Eclipse Kura MQTT Client Utility" x="210" y="200" width="850" height="330">
     <children xsi:type="advanced:PerspectiveStack" xmi:id="_6cuHUN7uEeSi-LhyoCOjzA" elementId="com.amitinside.mqtt.client.kura.perspective.stack">
       <children xsi:type="advanced:Perspective" xmi:id="_6cuHUd7uEeSi-LhyoCOjzA" elementId="com.amitinside.mqtt.client.kura.perspective">
         <children xsi:type="basic:PartSashContainer" xmi:id="_6cuHUt7uEeSi-LhyoCOjzA" elementId="com.amitinside.mqtt.client.kura.partSash" containerData="" horizontal="true">

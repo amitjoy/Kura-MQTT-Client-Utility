@@ -63,7 +63,7 @@ public final class LogViewPart {
 				| SWT.V_SCROLL | SWT.WRAP);
 		GridDataUtil.applyGridData(textLog).withFill();
 
-		form.getToolBarManager().add(new Action("Clear Log") {
+		form.getToolBarManager().add(new Action("Clear") {
 			@Override
 			public void run() {
 				textLog.setText("");
