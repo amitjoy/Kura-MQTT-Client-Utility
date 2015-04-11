@@ -1,6 +1,6 @@
 # README #
 
-This MQTT Client Application facilitates with all the MQTT related operation while using Eclipse Kura for IoT Application development
+This MQTT Client Application facilitates with all the MQTT related operations while using Eclipse Kura for IoT Application development
 
 ### What is this repository for? ###
 
