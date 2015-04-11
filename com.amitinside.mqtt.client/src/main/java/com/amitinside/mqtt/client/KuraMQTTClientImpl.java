@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.fusesource.hawtbuf.Buffer;
 import org.fusesource.hawtbuf.UTF8Buffer;
@@ -26,8 +28,10 @@ public class KuraMQTTClientImpl implements KuraMQTTClient {
 
 	private String host;
 	private String clientId;
+	private String errorMsg;
 	private volatile LogTracker logTracker;
-	private volatile boolean isConnected;
+	private boolean isConnected;
+	private final Lock connectionLock;
 
 	protected CallbackConnection connection = null;
 
@@ -51,6 +55,7 @@ public class KuraMQTTClientImpl implements KuraMQTTClient {
 	 *            the UNIQUE id of this client
 	 */
 	public KuraMQTTClientImpl() {
+		connectionLock = new ReentrantLock();
 	}
 
 	@Override
@@ -66,6 +71,24 @@ public class KuraMQTTClientImpl implements KuraMQTTClient {
 		} catch (final URISyntaxException e) {
 			logTracker.log("Invalid Host URL");
 		}
+		try {
+			if (connectionLock.tryLock(5, TimeUnit.SECONDS)) {
+				safelyConnect(mqtt);
+			}
+			isConnected = true;
+		} catch (final InterruptedException e) {
+			isConnected = false;
+		} catch (final ConnectionException e) {
+			isConnected = false;
+		} finally {
+			connectionLock.unlock();
+		}
+		return isConnected;
+	}
+
+	private void safelyConnect(final MQTT mqtt) throws ConnectionException {
+		if (isConnected)
+			disconnect();
 		// Initialize channels
 		channels = new HashMap<>();
 		// Register callbacks
@@ -74,13 +97,11 @@ public class KuraMQTTClientImpl implements KuraMQTTClient {
 			@Override
 			public void onConnected() {
 				logTracker.log("Host connected");
-				isConnected = true;
 			}
 
 			@Override
 			public void onDisconnected() {
 				logTracker.log("Host disconnected");
-				isConnected = false;
 			}
 
 			@Override
@@ -102,6 +123,7 @@ public class KuraMQTTClientImpl implements KuraMQTTClient {
 
 			@Override
 			public void onFailure(Throwable throwable) {
+				logTracker.log("Exception Occurred: " + throwable.getMessage());
 			}
 		});
 		// Connect to broker in a blocking fashion
@@ -111,26 +133,32 @@ public class KuraMQTTClientImpl implements KuraMQTTClient {
 			public void onSuccess(Void aVoid) {
 				l.countDown();
 				logTracker.log("Successfully Connected to Host");
-				isConnected = true;
 			}
 
 			@Override
 			public void onFailure(Throwable throwable) {
-				logTracker
-						.log("Impossible to CONNECT to the MQTT server, terminating");
-				isConnected = false;
+				errorMsg = "Impossible to CONNECT to the MQTT server, terminating";
+				logTracker.log(errorMsg);
+				exceptionOccurred(errorMsg);
 			}
+
 		});
 		try {
 			if (!l.await(5, TimeUnit.SECONDS)) {
-				logTracker
-						.log("Impossible to CONNECT to the MQTT server: TIMEOUT. Terminating");
+				errorMsg = "Impossible to CONNECT to the MQTT server: TIMEOUT. Terminating";
+				logTracker.log(errorMsg);
+				exceptionOccurred(errorMsg);
 			}
 		} catch (final InterruptedException e) {
-			logTracker
-					.log("\"Impossible to CONNECT to the MQTT server, terminating\"");
+			errorMsg = "\"Impossible to CONNECT to the MQTT server, terminating\"";
+			logTracker.log(errorMsg);
+			exceptionOccurred(errorMsg);
+
 		}
-		return isConnected;
+	}
+
+	private void exceptionOccurred(String message) throws ConnectionException {
+		throw new ConnectionException(message);
 	}
 
 	@Override

@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Events
+Bundle-SymbolicName: com.amitinside.mqtt.client.kura.events
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Amit Kumar Mondal
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Export-Package: com.amitinside.mqtt.client.kura.events

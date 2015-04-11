@@ -6,6 +6,12 @@ import com.amitinside.mqtt.client.kura.message.KuraPayload;
 
 public interface KuraMQTTClient {
 
+	class ConnectionException extends RuntimeException {
+		public ConnectionException(String message) {
+			super(message);
+		}
+	}
+
 	public void publish(final String channel, KuraPayload payload);
 
 	public void subscribe(final String channel, final MessageListener callback);

@@ -8,6 +8,8 @@ import java.util.Properties;
 import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
 
+import com.amitinside.mqtt.client.kura.events.KuraClientEventConstants;
+
 public class LogTrackerImpl implements LogTracker {
 
 	private final List<String> logList = new ArrayList<String>();
@@ -28,7 +30,8 @@ public class LogTrackerImpl implements LogTracker {
 		if (message != null) {
 			if (logList.add(message)) {
 				final Dictionary properties = new Properties();
-				final Event event = new Event(LOG_TOPIC, properties);
+				final Event event = new Event(
+						KuraClientEventConstants.LOG_EVENT_TOPIC, properties);
 				eventAdmin.sendEvent(event);
 			}
 		}

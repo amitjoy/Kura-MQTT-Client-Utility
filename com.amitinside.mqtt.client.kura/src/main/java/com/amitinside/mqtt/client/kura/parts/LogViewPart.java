@@ -20,6 +20,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
+import com.amitinside.mqtt.client.kura.events.KuraClientEventConstants;
 import com.amitinside.mqtt.client.kura.log.LogTracker;
 import com.amitinside.swt.layout.grid.GridDataUtil;
 
@@ -74,7 +75,8 @@ public final class LogViewPart {
 
 	@Inject
 	@Optional
-	public void updateForm(@EventTopic(LogTracker.LOG_TOPIC) Object obj) {
+	public void updateForm(
+			@EventTopic(KuraClientEventConstants.LOG_EVENT_TOPIC) Object obj) {
 		synchronize.asyncExec(new Runnable() {
 			@Override
 			public void run() {

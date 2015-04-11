@@ -9,6 +9,7 @@ Require-Bundle: javax.annotation,
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: com.amitinside.e4.bundleresourceloader,
  com.amitinside.mqtt.client,
+ com.amitinside.mqtt.client.kura.events,
  com.amitinside.mqtt.client.kura.log,
  com.amitinside.mqtt.client.kura.message,
  com.amitinside.swt.layout.grid,

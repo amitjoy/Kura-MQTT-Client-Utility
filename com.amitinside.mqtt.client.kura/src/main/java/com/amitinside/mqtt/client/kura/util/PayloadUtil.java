@@ -42,6 +42,9 @@ public class PayloadUtil {
 		final String SEPARATOR = "/";
 		final String[] topicNamespace = topic.split(SEPARATOR);
 		final StringBuffer buffer = new StringBuffer();
+		if (topic.startsWith("$EDC") && topicNamespace.length < 4) {
+			throw new ArrayIndexOutOfBoundsException();
+		}
 		if (topic.startsWith("$EDC"))
 			buffer.append(topicNamespace[0]).append(SEPARATOR)
 					.append(topicNamespace[1]).append(SEPARATOR)

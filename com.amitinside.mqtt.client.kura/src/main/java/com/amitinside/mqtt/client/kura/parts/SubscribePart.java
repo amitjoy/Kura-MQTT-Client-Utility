@@ -30,6 +30,7 @@ import com.amitinside.e4.bundleresourceloader.IBundleResourceLoader;
 import com.amitinside.mqtt.client.KuraMQTTClient;
 import com.amitinside.mqtt.client.MessageListener;
 import com.amitinside.mqtt.client.kura.dialog.ConnectionSettingsDialog;
+import com.amitinside.mqtt.client.kura.events.KuraClientEventConstants;
 import com.amitinside.mqtt.client.kura.message.KuraPayload;
 import com.amitinside.mqtt.client.kura.util.PayloadUtil;
 import com.amitinside.swt.layout.grid.GridDataUtil;
@@ -94,7 +95,7 @@ public final class SubscribePart {
 			public void widgetSelected(SelectionEvent e) {
 				if (!mqttClient.isConnected()) {
 					ConnectionSettingsDialog.openDialogBox(parent.getShell(),
-							application, mqttClient, broker);
+							application, mqttClient, broker, uiSynchronize);
 					return;
 				}
 
@@ -125,7 +126,7 @@ public final class SubscribePart {
 			@Override
 			public void run() {
 				ConnectionSettingsDialog.openDialogBox(parent.getShell(),
-						application, mqttClient, broker);
+						application, mqttClient, broker, uiSynchronize);
 			}
 		});
 
@@ -134,7 +135,7 @@ public final class SubscribePart {
 			public void run() {
 				if (!mqttClient.isConnected()) {
 					ConnectionSettingsDialog.openDialogBox(parent.getShell(),
-							application, mqttClient, broker);
+							application, mqttClient, broker, uiSynchronize);
 					return;
 				}
 
@@ -146,6 +147,7 @@ public final class SubscribePart {
 							"Topic can not be left blank");
 					return;
 				}
+
 				if (mqttClient.isConnected())
 					mqttClient.unsubscribe(textTopic.getText());
 
@@ -156,11 +158,10 @@ public final class SubscribePart {
 	}
 
 	private void defaultSetImage(Form form) {
-		if (mqttClient.isConnected())
-			form.setImage(bundleResourceService.loadImage(getClass(),
-					"icons/online.png"));
-		form.setImage(bundleResourceService.loadImage(getClass(),
-				"icons/offline.png"));
+		if (mqttClient.isConnected()) {
+			safelySetToolbarImage("icons/online.png");
+		} else
+			safelySetToolbarImage("icons/offline.png");
 	}
 
 	private void updateForm(final KuraPayload payload) {
@@ -178,17 +179,25 @@ public final class SubscribePart {
 
 	@Inject
 	@Optional
-	public void updateUIWithConnectionStatus(
-			@UIEventTopic(ConnectionSettingsDialog.EVENT_TOPIC) final Object message) {
-		if (message instanceof String[]) {
-			uiSynchronize.asyncExec(new Runnable() {
+	public void updateUIWithClientIdAndConnectionStatus(
+			@UIEventTopic(KuraClientEventConstants.CONNECTED_EVENT_TOPIC) final Object message) {
+		safelySetToolbarImage("icons/online.png");
+	}
 
-				@Override
-				public void run() {
-					form.setImage(bundleResourceService.loadImage(getClass(),
-							"icons/online.png"));
-				}
-			});
-		}
+	@Inject
+	@Optional
+	public void updateUIWithConnectionStatus(
+			@UIEventTopic(KuraClientEventConstants.DISCONNECTED_EVENT_TOPIC) final Object message) {
+		safelySetToolbarImage("icons/offline.png");
+	}
+
+	private void safelySetToolbarImage(final String path) {
+		uiSynchronize.asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				form.setImage(bundleResourceService.loadImage(getClass(), path));
+			}
+		});
+
 	}
 }

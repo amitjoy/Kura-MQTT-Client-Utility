@@ -1,6 +1,7 @@
 package com.amitinside.mqtt.client.kura.dialog;
 
 import org.eclipse.e4.core.services.events.IEventBroker;
+import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -16,17 +17,17 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.amitinside.mqtt.client.KuraMQTTClient;
+import com.amitinside.mqtt.client.kura.events.KuraClientEventConstants;
 import com.amitinside.mqtt.client.kura.util.ClientUtil;
 import com.amitinside.swt.layout.grid.GridDataUtil;
 
 public class ConnectionSettingsDialog extends TitleAreaDialog {
 
-	public static final String EVENT_TOPIC = "connection/established";
-
 	private volatile static KuraMQTTClient mqttClient;
 
 	private final MApplication application;
 	private final IEventBroker broker;
+	private final UISynchronize synchronize;
 
 	private Text txtMqttServerAddress;
 	private Text txtClientId;
@@ -36,24 +37,24 @@ public class ConnectionSettingsDialog extends TitleAreaDialog {
 
 	private ConnectionSettingsDialog(Shell parentShell,
 			MApplication application, KuraMQTTClient mqttClient,
-			IEventBroker broker) {
+			IEventBroker broker, UISynchronize synchronize) {
 		super(parentShell);
 		this.application = application;
 		this.mqttClient = mqttClient;
 		this.broker = broker;
+		this.synchronize = synchronize;
 	}
 
 	public static void openDialogBox(Shell shell, MApplication application,
-			KuraMQTTClient mqttClient, IEventBroker broker) {
+			final KuraMQTTClient mqttClient, final IEventBroker broker,
+			UISynchronize synchronize) {
 		final ConnectionSettingsDialog dialog = new ConnectionSettingsDialog(
-				shell, application, mqttClient, broker);
+				shell, application, mqttClient, broker, synchronize);
 
-		if (mqttClient == null) {
-			dialog.create();
-		} else {
-			dialog.setMqttServerAddress(mqttClient.getHost());
-			dialog.setClientId(mqttClient.getClientId());
-		}
+		dialog.create();
+
+		dialog.setMqttServerAddress(mqttClient.getHost());
+		dialog.setClientId(mqttClient.getClientId());
 
 		if (dialog.open() == Window.OK) {
 			if ("".equals(dialog.getMqttServerAddress())
@@ -62,14 +63,28 @@ public class ConnectionSettingsDialog extends TitleAreaDialog {
 						"MQTT Server Address can't be empty");
 				return;
 			}
+
 			if ("".equals(dialog.getClientId()) || dialog.getClientId() == null) {
 				MessageDialog.openError(shell, "Error in Client ID",
 						"Client ID can't be empty");
 				return;
 			}
-			mqttClient.connect(mqttServerAddress, clientId);
-			broker.post(EVENT_TOPIC,
-					new String[] { mqttServerAddress, clientId });
+
+			synchronize.asyncExec(new Runnable() {
+				@Override
+				public void run() {
+					final boolean status = mqttClient.connect(
+							mqttServerAddress, clientId);
+					if (status)
+						broker.post(
+								KuraClientEventConstants.CONNECTED_EVENT_TOPIC,
+								new String[] { mqttServerAddress, clientId });
+					else
+						broker.post(
+								KuraClientEventConstants.DISCONNECTED_EVENT_TOPIC,
+								new String[] { mqttServerAddress, clientId });
+				}
+			});
 		}
 
 	}

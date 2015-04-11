@@ -3,12 +3,11 @@
 
 <product name="Eclipse Kura MQTT Client" uid="com.amitinside.mqtt.client.kura" id="com.amitinside.mqtt.client.kura.product" application="org.eclipse.e4.ui.workbench.swt.E4Application" version="1.0.0.qualifier" useFeatures="true" includeLaunchers="true">
 
-
    <configIni use="default">
    </configIni>
 
    <launcherArgs>
-      <programArgs>-clearPersistedState -consoleLog -console
+      <programArgs>-clearPersistedState -consoleLog
       </programArgs>
       <vmArgsMac>-XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts
       </vmArgsMac>
@@ -25,11 +24,9 @@
       </win>
    </launcher>
 
-
    <vm>
       <macos include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7</macos>
    </vm>
-
 
    <plugins>
       <plugin id="ch.qos.logback.classic"/>
@@ -207,6 +204,14 @@
    </features>
 
    <configurations>
+      <plugin id="com.amitinside.e4.bundleresourceloader" autoStart="true" startLevel="0" />
+      <plugin id="com.amitinside.mqtt.client" autoStart="true" startLevel="0" />
+      <plugin id="com.amitinside.mqtt.client.kura" autoStart="true" startLevel="0" />
+      <plugin id="com.amitinside.mqtt.client.kura.events" autoStart="true" startLevel="0" />
+      <plugin id="com.amitinside.mqtt.client.kura.log" autoStart="true" startLevel="0" />
+      <plugin id="com.amitinside.mqtt.client.kura.payload" autoStart="true" startLevel="0" />
+      <plugin id="com.amitinside.mqtt.client.kura.payload.operator" autoStart="true" startLevel="0" />
+      <plugin id="com.amitinside.swt.layout.utility" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="2" />
