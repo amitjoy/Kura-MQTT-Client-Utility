@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Eclipse Kura Message
+Bundle-SymbolicName: com.amitinside.mqtt.client.kura.payload
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Amit Kumar Mondal
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ClassPath: lib/protobuf-java-2.6.0.jar,
+ .
+Export-Package: com.amitinside.mqtt.client.kura.message,
+ com.amitinside.mqtt.client.kura.message.protobuf,
+ com.google.protobuf

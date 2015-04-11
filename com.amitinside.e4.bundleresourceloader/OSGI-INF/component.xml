@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="com.amitinside.e4.bundleresourceloader">
+   <implementation class="com.amitinside.e4.bundleresourceloader.internal.BundleResourceLoaderImpl"/>
+   <service>
+      <provide interface="com.amitinside.e4.bundleresourceloader.IBundleResourceLoader"/>
+   </service>
+</scr:component>

@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Eclipse Kura Payload Operator
+Bundle-SymbolicName: com.amitinside.mqtt.client.kura.payload.operator
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: Amit Kumar Mondal
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Bundle-ClassPath: .
+Import-Package: com.amitinside.mqtt.client.kura.message,
+ com.amitinside.mqtt.client.kura.message.protobuf,
+ com.google.protobuf,
+ org.slf4j
+Export-Package: com.amitinside.mqtt.client.kura.message.payload.operator
