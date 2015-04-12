@@ -1,5 +1,16 @@
 package com.amitinside.mqtt.client.kura.parts;
 
+import static com.amitinside.mqtt.client.kura.dialog.ConnectionSettingsDialog.openDialogBox;
+import static com.amitinside.mqtt.client.kura.events.KuraClientEventConstants.CONNECTED_EVENT_TOPIC;
+import static com.amitinside.mqtt.client.kura.events.KuraClientEventConstants.DISCONNECTED_EVENT_TOPIC;
+import static com.amitinside.mqtt.client.kura.util.FormUtil.OFFLINE_STATUS_IMAGE;
+import static com.amitinside.mqtt.client.kura.util.FormUtil.ONLINE_STATUS_IMAGE;
+import static com.amitinside.mqtt.client.kura.util.FormUtil.safelySetToolbarImage;
+import static com.amitinside.mqtt.client.kura.util.FormUtil.setTootipConnectionStatus;
+import static com.amitinside.mqtt.client.kura.util.PayloadUtil.parsePayloadFromProto;
+import static com.amitinside.swt.layout.grid.GridDataUtil.applyGridData;
+import static org.eclipse.jface.dialogs.MessageDialog.openError;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
@@ -9,10 +20,7 @@ import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.MApplication;
-import org.eclipse.e4.ui.model.application.ui.basic.MPart;
-import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -28,35 +36,25 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import com.amitinside.e4.bundleresourceloader.IBundleResourceLoader;
 import com.amitinside.mqtt.client.KuraMQTTClient;
-import com.amitinside.mqtt.client.MessageListener;
-import com.amitinside.mqtt.client.kura.dialog.ConnectionSettingsDialog;
-import com.amitinside.mqtt.client.kura.events.KuraClientEventConstants;
+import com.amitinside.mqtt.client.adapter.MessageListener;
 import com.amitinside.mqtt.client.kura.message.KuraPayload;
-import com.amitinside.mqtt.client.kura.util.FormUtil;
-import com.amitinside.mqtt.client.kura.util.PayloadUtil;
-import com.amitinside.swt.layout.grid.GridDataUtil;
 
 public final class SubscribePart {
 
-	private final EPartService partService;
-	private final MApplication application;
 	private Label label;
 	private Text textTopic;
 	private Text textResponseMetrics;
-	private MPart part;
 	private Form form;
 	private final KuraMQTTClient mqttClient;
 	private final UISynchronize uiSynchronize;
 	private final IEventBroker broker;
 	private final IBundleResourceLoader bundleResourceService;
+	private Button subscribeButton;
 
 	@Inject
-	public SubscribePart(EPartService partService, MApplication application,
-			IEclipseContext context, UISynchronize uiSynchronize,
-			IEventBroker broker,
+	public SubscribePart(MApplication application, IEclipseContext context,
+			UISynchronize uiSynchronize, IEventBroker broker,
 			@Optional IBundleResourceLoader bundleResourceService) {
-		this.partService = partService;
-		this.application = application;
 		this.uiSynchronize = uiSynchronize;
 		this.broker = broker;
 		this.mqttClient = context.get(KuraMQTTClient.class);
@@ -72,38 +70,37 @@ public final class SubscribePart {
 		final FormToolkit toolkit = new FormToolkit(parent.getDisplay());
 
 		form = toolkit.createForm(composite);
-		GridDataUtil.applyGridData(form).withFill();
+		applyGridData(form).withFill();
 
 		form.setText("Subscribing for KuraPayload");
 		defaultSetImage(form);
 
 		form.getBody().setLayout(new GridLayout(2, false));
-		Label label = toolkit.createLabel(form.getBody(), "Topic* ", SWT.NULL);
+		label = toolkit.createLabel(form.getBody(), "Topic* ", SWT.NULL);
 		textTopic = toolkit.createText(form.getBody(), "");
 		textTopic.setMessage("TOPIC/NAMESPACE/EXAMPLE");
-		GridDataUtil.applyGridData(textTopic).withHorizontalFill();
+		applyGridData(textTopic).withHorizontalFill();
 
 		label = toolkit.createLabel(form.getBody(), "Response Metrics ",
 				SWT.NULL);
 		textResponseMetrics = toolkit.createText(form.getBody(), "",
 				SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL);
-		GridDataUtil.applyGridData(textResponseMetrics).withFill();
+		applyGridData(textResponseMetrics).withFill();
 
-		final Button subscribeButton = toolkit.createButton(form.getBody(),
-				"Subscribe", SWT.PUSH);
+		subscribeButton = toolkit.createButton(form.getBody(), "Subscribe",
+				SWT.PUSH);
 		subscribeButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (!mqttClient.isConnected()) {
-					ConnectionSettingsDialog.openDialogBox(parent.getShell(),
-							application, mqttClient, broker, uiSynchronize);
+					openDialogBox(parent.getShell(), mqttClient, broker,
+							uiSynchronize);
 					return;
 				}
 
 				if ((mqttClient.isConnected())
 						&& (textTopic == null || "".equals(textTopic.getText()))) {
-					MessageDialog.openError(parent.getShell(),
-							"Error in Subscribing",
+					openError(parent.getShell(), "Error in Subscribing",
 							"Topic can not be left blank");
 					return;
 				}
@@ -119,15 +116,15 @@ public final class SubscribePart {
 			}
 		});
 
-		GridDataUtil.applyGridData(subscribeButton).horizontalSpan(2)
-				.horizontalAlignment(GridData.END);
+		applyGridData(subscribeButton).horizontalSpan(2).horizontalAlignment(
+				GridData.END);
 
 		form.getToolBarManager().add(new Action("Connection") {
 
 			@Override
 			public void run() {
-				ConnectionSettingsDialog.openDialogBox(parent.getShell(),
-						application, mqttClient, broker, uiSynchronize);
+				openDialogBox(parent.getShell(), mqttClient, broker,
+						uiSynchronize);
 			}
 		});
 
@@ -135,16 +132,15 @@ public final class SubscribePart {
 			@Override
 			public void run() {
 				if (!mqttClient.isConnected()) {
-					ConnectionSettingsDialog.openDialogBox(parent.getShell(),
-							application, mqttClient, broker, uiSynchronize);
+					openDialogBox(parent.getShell(), mqttClient, broker,
+							uiSynchronize);
 					return;
 				}
 
 				if ((mqttClient.isConnected())
 						&& (textTopic.getText() == null || "".equals(textTopic
 								.getText()))) {
-					MessageDialog.openError(parent.getShell(),
-							"Error while Unsubscribing",
+					openError(parent.getShell(), "Error while Unsubscribing",
 							"Topic can not be left blank");
 					return;
 				}
@@ -160,11 +156,12 @@ public final class SubscribePart {
 
 	private void defaultSetImage(Form form) {
 		if (mqttClient.isConnected()) {
-			FormUtil.safelySetToolbarImage(form, uiSynchronize,
-					bundleResourceService, "icons/online.png");
-		} else
-			FormUtil.safelySetToolbarImage(form, uiSynchronize,
-					bundleResourceService, "icons/offline.png");
+			safelySetToolbarImage(form, uiSynchronize, bundleResourceService,
+					ONLINE_STATUS_IMAGE);
+		} else {
+			safelySetToolbarImage(form, uiSynchronize, bundleResourceService,
+					OFFLINE_STATUS_IMAGE);
+		}
 	}
 
 	private void updateForm(final KuraPayload payload) {
@@ -173,8 +170,8 @@ public final class SubscribePart {
 
 				@Override
 				public void run() {
-					textResponseMetrics.setText(PayloadUtil
-							.parsePayloadFromProto(payload.metrics()));
+					textResponseMetrics.setText(parsePayloadFromProto(payload
+							.metrics()));
 				}
 			});
 		}
@@ -183,16 +180,19 @@ public final class SubscribePart {
 	@Inject
 	@Optional
 	public void updateUIWithClientIdAndConnectionStatus(
-			@UIEventTopic(KuraClientEventConstants.CONNECTED_EVENT_TOPIC) final Object message) {
-		FormUtil.safelySetToolbarImage(form, uiSynchronize,
-				bundleResourceService, "icons/online.png");
+			@UIEventTopic(CONNECTED_EVENT_TOPIC) final Object message) {
+		safelySetToolbarImage(form, uiSynchronize, bundleResourceService,
+				ONLINE_STATUS_IMAGE);
+		setTootipConnectionStatus(uiSynchronize, subscribeButton,
+				((String[]) message)[0], true);
 	}
 
 	@Inject
 	@Optional
 	public void updateUIWithConnectionStatus(
-			@UIEventTopic(KuraClientEventConstants.DISCONNECTED_EVENT_TOPIC) final Object message) {
-		FormUtil.safelySetToolbarImage(form, uiSynchronize,
-				bundleResourceService, "icons/offline.png");
+			@UIEventTopic(DISCONNECTED_EVENT_TOPIC) final Object message) {
+		safelySetToolbarImage(form, uiSynchronize, bundleResourceService,
+				OFFLINE_STATUS_IMAGE);
+		setTootipConnectionStatus(uiSynchronize, subscribeButton, null, false);
 	}
 }

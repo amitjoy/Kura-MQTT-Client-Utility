@@ -28,8 +28,8 @@
   <handlers xmi:id="_6ctgV97uEeSi-LhyoCOjzA" elementId="com.amitinside.mqtt.client.kura.handler.aboutCommand" contributionURI="bundleclass://com.amitinside.mqtt.client.kura/com.amitinside.mqtt.client.kura.handlers.AboutHandler" command="_6ctgVt7uEeSi-LhyoCOjzA"/>
   <bindingTables xmi:id="_6ctgTt7uEeSi-LhyoCOjzA" bindingContext="_6ctgSd7uEeSi-LhyoCOjzA">
     <bindings xmi:id="_6ctgT97uEeSi-LhyoCOjzA" keySequence="M1+Q" command="_6ctgTN7uEeSi-LhyoCOjzA"/>
-    <bindings xmi:id="_6ctgUt7uEeSi-LhyoCOjzA" keySequence="M1+O" command="_6ctgUN7uEeSi-LhyoCOjzA"/>
-    <bindings xmi:id="_6ctgVd7uEeSi-LhyoCOjzA" keySequence="M1+S" command="_6ctgU97uEeSi-LhyoCOjzA"/>
+    <bindings xmi:id="_6ctgUt7uEeSi-LhyoCOjzA" keySequence="M1+O"/>
+    <bindings xmi:id="_6ctgVd7uEeSi-LhyoCOjzA" keySequence="M1+S"/>
     <bindings xmi:id="_6ctgWN7uEeSi-LhyoCOjzA" keySequence="M1+A" command="_6ctgVt7uEeSi-LhyoCOjzA"/>
   </bindingTables>
   <rootContext xmi:id="_6ctgSd7uEeSi-LhyoCOjzA" elementId="org.eclipse.ui.contexts.dialogAndWindow" name="In Dialog and Windows">
@@ -37,8 +37,6 @@
     <children xmi:id="_6ctgS97uEeSi-LhyoCOjzA" elementId="org.eclipse.ui.contexts.dialog" name="In Dialogs"/>
   </rootContext>
   <commands xmi:id="_6ctgTN7uEeSi-LhyoCOjzA" elementId="org.eclipse.ui.file.exit" commandName="quitCommand"/>
-  <commands xmi:id="_6ctgUN7uEeSi-LhyoCOjzA" elementId="com.amitinside.mqtt.client.kura.open" commandName="openCommand"/>
-  <commands xmi:id="_6ctgU97uEeSi-LhyoCOjzA" elementId="org.eclipse.ui.file.save" commandName="saveCommand"/>
   <commands xmi:id="_6ctgVt7uEeSi-LhyoCOjzA" elementId="org.eclipse.ui.help.aboutAction" commandName="aboutCommand"/>
   <addons xmi:id="_6ctgQt7uEeSi-LhyoCOjzA" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
   <addons xmi:id="_6ctgQ97uEeSi-LhyoCOjzA" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>

@@ -1,10 +1,14 @@
 package com.amitinside.mqtt.client.kura.dialog;
 
+import static com.amitinside.mqtt.client.kura.events.KuraClientEventConstants.CONNECTED_EVENT_TOPIC;
+import static com.amitinside.mqtt.client.kura.events.KuraClientEventConstants.DISCONNECTED_EVENT_TOPIC;
+import static com.amitinside.mqtt.client.kura.util.ClientUtil.clientId;
+import static com.amitinside.swt.layout.grid.GridDataUtil.applyGridData;
+import static org.eclipse.jface.dialogs.IMessageProvider.INFORMATION;
+import static org.eclipse.jface.dialogs.MessageDialog.openError;
+
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.UISynchronize;
-import org.eclipse.e4.ui.model.application.MApplication;
-import org.eclipse.jface.dialogs.IMessageProvider;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -17,39 +21,34 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import com.amitinside.mqtt.client.KuraMQTTClient;
-import com.amitinside.mqtt.client.kura.events.KuraClientEventConstants;
-import com.amitinside.mqtt.client.kura.util.ClientUtil;
-import com.amitinside.swt.layout.grid.GridDataUtil;
 
 public class ConnectionSettingsDialog extends TitleAreaDialog {
 
 	private volatile static KuraMQTTClient mqttClient;
 
-	private final MApplication application;
 	private final IEventBroker broker;
 	private final UISynchronize synchronize;
 
-	private Text txtMqttServerAddress;
+	private static Text txtMqttServerAddress;
 	private Text txtClientId;
 
 	private static String mqttServerAddress;
 	private static String clientId;
 
 	private ConnectionSettingsDialog(Shell parentShell,
-			MApplication application, KuraMQTTClient mqttClient,
-			IEventBroker broker, UISynchronize synchronize) {
+			KuraMQTTClient mqttClient, IEventBroker broker,
+			UISynchronize synchronize) {
 		super(parentShell);
-		this.application = application;
 		this.mqttClient = mqttClient;
 		this.broker = broker;
 		this.synchronize = synchronize;
 	}
 
-	public static void openDialogBox(Shell shell, MApplication application,
+	public static void openDialogBox(Shell shell,
 			final KuraMQTTClient mqttClient, final IEventBroker broker,
 			UISynchronize synchronize) {
 		final ConnectionSettingsDialog dialog = new ConnectionSettingsDialog(
-				shell, application, mqttClient, broker, synchronize);
+				shell, mqttClient, broker, synchronize);
 		dialog.create();
 
 		dialog.setMqttServerAddress(mqttClient.getHost());
@@ -58,13 +57,13 @@ public class ConnectionSettingsDialog extends TitleAreaDialog {
 		if (dialog.open() == Window.OK) {
 			if ("".equals(dialog.getMqttServerAddress())
 					|| dialog.getMqttServerAddress() == null) {
-				MessageDialog.openError(shell, "Error in MQTT Server Address",
+				openError(shell, "Error in MQTT Server Address",
 						"MQTT Server Address can't be empty");
 				return;
 			}
 
 			if ("".equals(dialog.getClientId()) || dialog.getClientId() == null) {
-				MessageDialog.openError(shell, "Error in Client ID",
+				openError(shell, "Error in Client ID",
 						"Client ID can't be empty");
 				return;
 			}
@@ -75,13 +74,11 @@ public class ConnectionSettingsDialog extends TitleAreaDialog {
 					final boolean status = mqttClient.connect(
 							mqttServerAddress, clientId);
 					if (status)
-						broker.post(
-								KuraClientEventConstants.CONNECTED_EVENT_TOPIC,
-								new String[] { mqttServerAddress, clientId });
+						broker.post(CONNECTED_EVENT_TOPIC, new String[] {
+								mqttServerAddress, clientId });
 					else
-						broker.post(
-								KuraClientEventConstants.DISCONNECTED_EVENT_TOPIC,
-								new String[] { mqttServerAddress, clientId });
+						broker.post(DISCONNECTED_EVENT_TOPIC, new String[] {
+								mqttServerAddress, clientId });
 				}
 			});
 		}
@@ -93,16 +90,17 @@ public class ConnectionSettingsDialog extends TitleAreaDialog {
 		super.create();
 		setTitle("Eclipse Kura MQTT Client Connection Settings");
 		setMessage("Configuration parameters for MQTT Server Connection",
-				IMessageProvider.INFORMATION);
+				INFORMATION);
 	}
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		final Composite area = (Composite) super.createDialogArea(parent);
 		final Composite container = new Composite(area, SWT.NONE);
-		container.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+		applyGridData(container).withFill();
 		final GridLayout layout = new GridLayout(2, false);
-		container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		applyGridData(container).withFill();
 		container.setLayout(layout);
 
 		createMQTTServerAddress(container);
@@ -121,8 +119,7 @@ public class ConnectionSettingsDialog extends TitleAreaDialog {
 		if (mqttServerAddress != null && !"".equals(mqttServerAddress))
 			txtMqttServerAddress.setText(mqttServerAddress);
 
-		GridDataUtil.applyGridData(txtMqttServerAddress)
-				.grabExcessHorizontalSpace(true)
+		applyGridData(txtMqttServerAddress).grabExcessHorizontalSpace(true)
 				.horizontalAlignment(GridData.FILL);
 	}
 
@@ -131,12 +128,12 @@ public class ConnectionSettingsDialog extends TitleAreaDialog {
 		lbtClientId.setText("Client ID*");
 
 		txtClientId = new Text(container, SWT.BORDER);
-		txtClientId.setText(ClientUtil.clientId());
+		txtClientId.setText(clientId());
 
 		if (clientId != null && !"".equals(clientId))
 			txtClientId.setText(clientId);
 
-		GridDataUtil.applyGridData(txtClientId).grabExcessHorizontalSpace(true)
+		applyGridData(txtClientId).grabExcessHorizontalSpace(true)
 				.horizontalAlignment(GridData.FILL);
 	}
 
