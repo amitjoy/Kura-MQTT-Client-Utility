@@ -7,13 +7,19 @@ import static com.amitinside.swt.layout.grid.GridDataUtil.applyGridData;
 import static org.eclipse.jface.dialogs.IMessageProvider.INFORMATION;
 import static org.eclipse.jface.dialogs.MessageDialog.openError;
 
+import java.util.List;
+
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.UISynchronize;
+import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
@@ -28,27 +34,38 @@ public class ConnectionSettingsDialog extends TitleAreaDialog {
 
 	private final IEventBroker broker;
 	private final UISynchronize synchronize;
+	private final MWindow window;
 
 	private static Text txtMqttServerAddress;
 	private Text txtClientId;
+	private Combo helpServersCombo;
 
 	private static String mqttServerAddress;
 	private static String clientId;
+	private static List<String> listOfTestServers;
+
+	private static String eclipseServer;
+	private static String mosquittoServer;
+	private static String mqttDashboardServer;
 
 	private ConnectionSettingsDialog(Shell parentShell,
 			KuraMQTTClient mqttClient, IEventBroker broker,
-			UISynchronize synchronize) {
+			UISynchronize synchronize, MWindow window) {
 		super(parentShell);
 		this.mqttClient = mqttClient;
 		this.broker = broker;
 		this.synchronize = synchronize;
+		this.window = window;
 	}
 
 	public static void openDialogBox(Shell shell,
 			final KuraMQTTClient mqttClient, final IEventBroker broker,
-			UISynchronize synchronize) {
+			UISynchronize synchronize, MWindow window) {
 		final ConnectionSettingsDialog dialog = new ConnectionSettingsDialog(
-				shell, mqttClient, broker, synchronize);
+				shell, mqttClient, broker, synchronize, window);
+
+		retriveAllTheTestServers(window);
+
 		dialog.create();
 
 		dialog.setMqttServerAddress(mqttClient.getHost());
@@ -85,6 +102,12 @@ public class ConnectionSettingsDialog extends TitleAreaDialog {
 
 	}
 
+	private static void retriveAllTheTestServers(MWindow window) {
+		eclipseServer = (String) window.getContext().get("eclipse_broker");
+		mosquittoServer = (String) window.getContext().get("mosquitto_broker");
+		mqttDashboardServer = (String) window.getContext().get("mqttdashboard");
+	}
+
 	@Override
 	public void create() {
 		super.create();
@@ -103,10 +126,44 @@ public class ConnectionSettingsDialog extends TitleAreaDialog {
 		applyGridData(container).withFill();
 		container.setLayout(layout);
 
+		createSomeTestServersDropdown(container);
 		createMQTTServerAddress(container);
 		createClientId(container);
 
 		return area;
+	}
+
+	private void createSomeTestServersDropdown(Composite container) {
+		final Label lbtTestServers = new Label(container, SWT.NONE);
+		lbtTestServers.setText("Test Broker");
+
+		helpServersCombo = new Combo(container, SWT.READ_ONLY);
+		helpServersCombo.setBounds(50, 50, 150, 65);
+		final String items[] = { "-- Select Test Broker --", eclipseServer,
+				mosquittoServer, mqttDashboardServer };
+		helpServersCombo.setItems(items);
+		helpServersCombo.select(0);
+		helpServersCombo.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent event) {
+				switch (helpServersCombo.getSelectionIndex()) {
+				case 1:
+					txtMqttServerAddress.setText(eclipseServer);
+					break;
+				case 2:
+					txtMqttServerAddress.setText(mosquittoServer);
+					break;
+				case 3:
+					txtMqttServerAddress.setText(mqttDashboardServer);
+					break;
+				default:
+					break;
+				}
+			}
+		});
+
+		applyGridData(helpServersCombo).grabExcessHorizontalSpace(true)
+				.horizontalAlignment(GridData.FILL);
 	}
 
 	private void createMQTTServerAddress(Composite container) {

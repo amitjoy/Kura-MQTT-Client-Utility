@@ -20,6 +20,7 @@ import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.MApplication;
+import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -48,15 +49,18 @@ public final class SubscribePart {
 	private final KuraMQTTClient mqttClient;
 	private final UISynchronize uiSynchronize;
 	private final IEventBroker broker;
+	private final MWindow window;
 	private final IBundleResourceLoader bundleResourceService;
 	private Button subscribeButton;
 
 	@Inject
 	public SubscribePart(MApplication application, IEclipseContext context,
 			UISynchronize uiSynchronize, IEventBroker broker,
-			@Optional IBundleResourceLoader bundleResourceService) {
+			@Optional IBundleResourceLoader bundleResourceService,
+			MWindow window) {
 		this.uiSynchronize = uiSynchronize;
 		this.broker = broker;
+		this.window = window;
 		this.mqttClient = context.get(KuraMQTTClient.class);
 		this.bundleResourceService = context.get(IBundleResourceLoader.class);
 	}
@@ -94,7 +98,7 @@ public final class SubscribePart {
 			public void widgetSelected(SelectionEvent e) {
 				if (!mqttClient.isConnected()) {
 					openDialogBox(parent.getShell(), mqttClient, broker,
-							uiSynchronize);
+							uiSynchronize, window);
 					return;
 				}
 
@@ -124,7 +128,7 @@ public final class SubscribePart {
 			@Override
 			public void run() {
 				openDialogBox(parent.getShell(), mqttClient, broker,
-						uiSynchronize);
+						uiSynchronize, window);
 			}
 		});
 
@@ -133,7 +137,7 @@ public final class SubscribePart {
 			public void run() {
 				if (!mqttClient.isConnected()) {
 					openDialogBox(parent.getShell(), mqttClient, broker,
-							uiSynchronize);
+							uiSynchronize, window);
 					return;
 				}
 
