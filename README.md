@@ -29,18 +29,11 @@ The main motive of developing this application is to use Eclipse Kura's CRUD lik
 * Accept the certificate from the popped up dialog box
 * You will again be prompted to restart your IDE
 * Go ahead and restart it
-* Install E4 Tooling, Jeeeyul Eclipse Theme Pack and put OPAL SWT bundle in Target Platform 
-* Import all the projects
-* External Dependencies: Jeeeyul Eclipse Theme Pack, Apache Commons Lang, Opal SWT, slf4j, log4j
+* Now download a plugin from this: https://drive.google.com/file/d/0BxckedW58_H5dUZKY0J2b3pwRWc/edit?pli=1
+* Put it in your **plugins** folder which you will find in your Eclipse folder
+* Again you have to restart your IDE
+* Download all the projects and import all of them into your workspace
 * Run the com.amitinside.mqtt.client.kura Product
-
-### **How do I set up my target platform?** ###
-
-* Install E4 Tooling
-* Install Eclipse Theme Pack by Jeeeyul
-* Apache Commons Lang will already be there in your target platform so no need to install it additionally
-* Put Opal SWT OSGi Bundle in your target platform plugins location and restart Eclipse IDE
-* slf4j, log4j will be present in your target platform and hence no need to install again.
 
 ### **Who do I talk to?** ###
 
