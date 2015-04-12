@@ -5,7 +5,7 @@
          id="product"
          point="org.eclipse.core.runtime.products">
       <product
-            name="Eclipse Kura MQTT Client"
+            name="Eclipse Kura MQTT Client Utility"
             application="org.eclipse.e4.ui.workbench.swt.E4Application">
          <property
                name="applicationCSS"
@@ -13,7 +13,7 @@
          </property>
          <property
                name="appName"
-               value="Eclipse Kura MQTT Client">
+               value="Eclipse Kura MQTT Client Utility">
          </property>
          <property
                name="lifeCycleURI"
