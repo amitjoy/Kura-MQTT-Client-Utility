@@ -19,6 +19,7 @@ import org.fusesource.mqtt.client.MQTT;
 import org.fusesource.mqtt.client.QoS;
 import org.fusesource.mqtt.client.Topic;
 
+import com.amitinside.mqtt.client.adapter.MessageListener;
 import com.amitinside.mqtt.client.kura.log.LogTracker;
 import com.amitinside.mqtt.client.kura.message.KuraPayload;
 import com.amitinside.mqtt.client.kura.message.payload.operator.KuraPayloadDecoder;

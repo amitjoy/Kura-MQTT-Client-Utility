@@ -2,6 +2,7 @@ package com.amitinside.mqtt.client;
 
 import java.util.Set;
 
+import com.amitinside.mqtt.client.adapter.MessageListener;
 import com.amitinside.mqtt.client.kura.message.KuraPayload;
 
 public interface KuraMQTTClient {

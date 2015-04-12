@@ -1,10 +1,10 @@
-package com.amitinside.mqtt.client;
+package com.amitinside.mqtt.client.adapter;
 
 import com.amitinside.mqtt.client.kura.message.KuraPayload;
 
 public abstract class MessageListener extends MessageAdapter {
 
-	protected void processMessage(KuraPayload payload) {
+	public void processMessage(KuraPayload payload) {
 		logTracker.log("Subscription Message Received");
 	}
 

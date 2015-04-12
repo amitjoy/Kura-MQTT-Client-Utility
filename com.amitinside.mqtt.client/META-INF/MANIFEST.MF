@@ -14,7 +14,8 @@ Import-Package: com.amitinside.mqtt.client.kura.events,
  com.amitinside.mqtt.client.kura.log,
  com.amitinside.mqtt.client.kura.message,
  com.amitinside.mqtt.client.kura.message.payload.operator
-Export-Package: com.amitinside.mqtt.client
+Export-Package: com.amitinside.mqtt.client,
+ com.amitinside.mqtt.client.adapter
 Service-Component: OSGI-INF/component.xml,
  OSGI-INF/AdapterComponent.xml
 Bundle-ActivationPolicy: lazy

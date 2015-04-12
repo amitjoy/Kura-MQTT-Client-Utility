@@ -1,4 +1,4 @@
-package com.amitinside.mqtt.client;
+package com.amitinside.mqtt.client.adapter;
 
 import com.amitinside.mqtt.client.kura.log.LogTracker;
 
