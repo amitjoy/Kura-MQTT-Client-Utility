@@ -11,6 +11,8 @@ import static com.amitinside.mqtt.client.kura.util.PayloadUtil.parsePayloadFromP
 import static com.amitinside.swt.layout.grid.GridDataUtil.applyGridData;
 import static org.eclipse.jface.dialogs.MessageDialog.openError;
 
+import java.io.UnsupportedEncodingException;
+
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
@@ -174,8 +176,17 @@ public final class SubscribePart {
 
 				@Override
 				public void run() {
-					textResponseMetrics.setText(parsePayloadFromProto(payload
-							.metrics()));
+					final StringBuilder responseBuilder = new StringBuilder();
+					try {
+						responseBuilder
+								.append(parsePayloadFromProto(payload.metrics()))
+								.append("\n")
+								.append((payload.getBody() != null) ? new String(
+										payload.getBody(), "UTF-8") : "");
+					} catch (final UnsupportedEncodingException e) {
+						e.printStackTrace();
+					}
+					textResponseMetrics.setText(responseBuilder.toString());
 				}
 			});
 		}
