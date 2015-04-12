@@ -19,6 +19,16 @@ The main motive of developing this application is to use Eclipse Kura's CRUD lik
 * You will prompted with a list
 * Choose **Eclipse 4 - Core Tools** and **Eclipse 4 - CSS Spy**
 * Click on **Next**
+* Wait sometime until you see a dialog pox prompting you to install
+* Press **OK**
+* Wait for few more minutes and you will be asked to restart your Eclipse IDE
+* Restart the IDE
+* After the restart, go to **Help** -> **Eclipse Marketplace**
+* Search for **jeeeyul**
+* Install Jeeeyul Eclipse Themes 2.2
+* Accept the certificate from the popped up dialog box
+* You will again be prompted to restart your IDE
+* Go ahead and restart it
 * Install E4 Tooling, Jeeeyul Eclipse Theme Pack and put OPAL SWT bundle in Target Platform 
 * Import all the projects
 * External Dependencies: Jeeeyul Eclipse Theme Pack, Apache Commons Lang, Opal SWT, slf4j, log4j
