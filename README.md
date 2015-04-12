@@ -18,7 +18,7 @@ The main motive of developing this application is to use Eclipse Kura's CRUD lik
 
 ### **How do I get set up?** ###
 
-* Download Eclipse for RCP and RAP Developers
+* Download Eclipse for RCP and RAP Developers from **https://eclipse.org/downloads/packages/eclipse-rcp-and-rap-developers/lunasr2**
 * Extract the compressed file and run Eclipse
 * Go to **Help Menu** and Select **Install New Software**
 * In the Dialog box, paste **http://download.eclipse.org/e4/downloads/drops/S-0.17-201501051100/repository/** in Work With Section
