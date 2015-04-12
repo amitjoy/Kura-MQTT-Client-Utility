@@ -23,7 +23,7 @@ The main motive of developing this application is to use Eclipse Kura's CRUD lik
 * Go to **Help Menu** and Select **Install New Software**
 * In the Dialog box, paste **http://download.eclipse.org/e4/downloads/drops/S-0.17-201501051100/repository/** in Work With Section
 * Press Enter
-* You will prompted with a list
+* You will be prompted with a list
 * Choose **Eclipse 4 - Core Tools** and **Eclipse 4 - CSS Spy**
 * Click on **Next**
 * Wait sometime until you see a dialog pox prompting you to install
@@ -32,7 +32,7 @@ The main motive of developing this application is to use Eclipse Kura's CRUD lik
 * Restart the IDE
 * After the restart, go to **Help** -> **Eclipse Marketplace**
 * Search for **jeeeyul**
-* Install Jeeeyul Eclipse Themes 2.2
+* Install **Jeeeyul Eclipse Themes 2.2**
 * Accept the certificate from the popped up dialog box
 * You will again be prompted to restart your IDE
 * Go ahead and restart it
@@ -40,7 +40,8 @@ The main motive of developing this application is to use Eclipse Kura's CRUD lik
 * Put it in your **plugins** folder which you will find in your Eclipse folder
 * Again you have to restart your IDE
 * Download all the projects and import all of them into your workspace
-* Run the **com.amitinside.mqtt.client.kura.product**
+* Dowuble click on **com.amitinside.mqtt.client.kura.product** placed under **com.amitinside.mqtt.client.kura.product** project
+* Then click on **Launch an Eclipse Application**
 
 ### **Who do I talk to?** ###
 
