@@ -44,9 +44,10 @@ public class ConnectionSettingsDialog extends TitleAreaDialog {
 	private static String clientId;
 	private static List<String> listOfTestServers;
 
-	private static String eclipseServer;
-	private static String mosquittoServer;
-	private static String mqttDashboardServer;
+	private static String eclipseServer = "";
+	private static String mosquittoServer = "";
+	private static String mqttDashboardServer = "";
+	private static String m2mEclipse = "";
 
 	private ConnectionSettingsDialog(Shell parentShell,
 			KuraMQTTClient mqttClient, IEventBroker broker,
@@ -106,6 +107,7 @@ public class ConnectionSettingsDialog extends TitleAreaDialog {
 		eclipseServer = (String) window.getContext().get("eclipse_broker");
 		mosquittoServer = (String) window.getContext().get("mosquitto_broker");
 		mqttDashboardServer = (String) window.getContext().get("mqttdashboard");
+		m2mEclipse = (String) window.getContext().get("m2m_eclipse");
 	}
 
 	@Override
@@ -140,7 +142,7 @@ public class ConnectionSettingsDialog extends TitleAreaDialog {
 		helpServersCombo = new Combo(container, SWT.READ_ONLY);
 		helpServersCombo.setBounds(50, 50, 150, 65);
 		final String items[] = { "-- Select Test Broker --", eclipseServer,
-				mosquittoServer, mqttDashboardServer };
+				mosquittoServer, mqttDashboardServer, m2mEclipse };
 		helpServersCombo.setItems(items);
 		helpServersCombo.select(0);
 		helpServersCombo.addSelectionListener(new SelectionAdapter() {
@@ -155,6 +157,9 @@ public class ConnectionSettingsDialog extends TitleAreaDialog {
 					break;
 				case 3:
 					txtMqttServerAddress.setText(mqttDashboardServer);
+					break;
+				case 4:
+					txtMqttServerAddress.setText(m2mEclipse);
 					break;
 				default:
 					break;

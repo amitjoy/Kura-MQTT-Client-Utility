@@ -25,6 +25,7 @@
     <properties key="eclipse_broker" value="iot.eclipse.org"/>
     <properties key="mosquitto_broker" value="test.mosquitto.org"/>
     <properties key="mqttdashboard" value="broker.mqttdashboard.com"/>
+    <properties key="m2m_eclipse" value="m2m.eclipse.org"/>
     <trimBars xmi:id="_6cuHVd7uEeSi-LhyoCOjzA"/>
   </children>
   <handlers xmi:id="_6ctgTd7uEeSi-LhyoCOjzA" elementId="com.amitinside.mqtt.client.kura.handler.quitCommand" contributionURI="bundleclass://com.amitinside.mqtt.client.kura/com.amitinside.mqtt.client.kura.handlers.QuitHandler" command="_6ctgTN7uEeSi-LhyoCOjzA"/>
