@@ -1,9 +1,14 @@
-[]()![Screen Shot 2015-04-12 at 11.24.04 am.png]
-(https://bitbucket.org/repo/LxLXp5/images/3222827065-Screen%20Shot%202015-04-12%20at%2011.24.33%20am.png)
-![Screen Shot 2015-04-12 at 11.24.33 am.png](https://bitbucket.org/repo/LxLXp5/images/1029759634-Screen%20Shot%202015-04-12%20at%2011.24.04%20am.png)
-![Screen Shot 2015-04-12 at 11.25.24 am.png](https://bitbucket.org/repo/LxLXp5/images/1295677033-Screen%20Shot%202015-04-12%20at%2011.25.24%20am.png)
-![Screen Shot 2015-04-12 at 11.29.08 am.png](https://bitbucket.org/repo/LxLXp5/images/1682449182-Screen%20Shot%202015-04-12%20at%2011.29.08%20am.png)
-![Screen Shot 2015-04-12 at 11.29.39 am.png](https://bitbucket.org/repo/LxLXp5/images/2175841820-Screen%20Shot%202015-04-12%20at%2011.29.39%20am.png)
+![Screen Shot 2015-04-13 at 1.02.27 am.png](https://bitbucket.org/repo/LxLXp5/images/949990419-Screen%20Shot%202015-04-13%20at%201.02.27%20am.png)
+
+![Screen Shot 2015-04-13 at 1.02.55 am.png](https://bitbucket.org/repo/LxLXp5/images/1544419042-Screen%20Shot%202015-04-13%20at%201.02.55%20am.png)
+
+![Screen Shot 2015-04-13 at 1.03.15 am.png](https://bitbucket.org/repo/LxLXp5/images/2588438437-Screen%20Shot%202015-04-13%20at%201.03.15%20am.png)
+
+![Screen Shot 2015-04-13 at 1.03.40 am.png](https://bitbucket.org/repo/LxLXp5/images/948579282-Screen%20Shot%202015-04-13%20at%201.03.40%20am.png)
+
+![Screen Shot 2015-04-13 at 1.04.07 am.png](https://bitbucket.org/repo/LxLXp5/images/1352840855-Screen%20Shot%202015-04-13%20at%201.04.07%20am.png)
+
+![Screen Shot 2015-04-13 at 1.04.27 am.png](https://bitbucket.org/repo/LxLXp5/images/818391483-Screen%20Shot%202015-04-13%20at%201.04.27%20am.png)
 
 **README** #
 
@@ -36,7 +41,7 @@ The main motive of developing this application is to use Eclipse Kura's CRUD lik
 * Accept the certificate from the popped up dialog box
 * You will again be prompted to restart your IDE
 * Go ahead and restart it
-* Now download a plugin from this: https://drive.google.com/file/d/0BxckedW58_H5dUZKY0J2b3pwRWc/edit?pli=1
+* Now download a plugin from this: **https://drive.google.com/file/d/0BxckedW58_H5dUZKY0J2b3pwRWc/edit?pli=1**
 * Put it in your **plugins** folder which you will find in your Eclipse folder
 * Again you have to restart your IDE
 * Download all the projects and import all of them into your workspace
