@@ -11,6 +11,14 @@ The main motive of developing this application is to use Eclipse Kura's CRUD lik
 
 ### **How do I get set up?** ###
 
+* Download Eclipse for RCP and RAP Developers
+* Extract the compressed file and run Eclipse
+* Go to **Help Menu** and Select **Install New Software**
+* In the Dialog box, paste **http://download.eclipse.org/e4/downloads/drops/S-0.17-201501051100/repository/** in Work With Section
+* Press Enter
+* You will prompted with a list
+* Choose **Eclipse 4 - Core Tools** and **Eclipse 4 - CSS Spy**
+* Click on **Next**
 * Install E4 Tooling, Jeeeyul Eclipse Theme Pack and put OPAL SWT bundle in Target Platform 
 * Import all the projects
 * External Dependencies: Jeeeyul Eclipse Theme Pack, Apache Commons Lang, Opal SWT, slf4j, log4j
