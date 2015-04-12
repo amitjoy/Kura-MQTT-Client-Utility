@@ -13,8 +13,7 @@ import static com.amitinside.swt.layout.grid.GridDataUtil.applyGridData;
 import static org.eclipse.jface.dialogs.MessageDialog.openError;
 import static org.mihalis.opal.utils.SWTGraphicUtil.centerShell;
 
-import java.util.Enumeration;
-import java.util.Properties;
+import java.io.UnsupportedEncodingException;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -43,7 +42,6 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import com.amitinside.e4.bundleresourceloader.IBundleResourceLoader;
 import com.amitinside.mqtt.client.KuraMQTTClient;
 import com.amitinside.mqtt.client.kura.message.KuraPayload;
-import com.amitinside.mqtt.client.kura.util.PayloadUtil;
 
 public final class PublishPart {
 
@@ -104,7 +102,7 @@ public final class PublishPart {
 		textRequesterClientId = toolkit.createText(form.getBody(), "");
 		applyGridData(textRequesterClientId).withHorizontalFill();
 
-		label = toolkit.createLabel(form.getBody(), "Payload Metrics ",
+		label = toolkit.createLabel(form.getBody(), "Request Payload ",
 				SWT.NULL);
 		textPublishMetric = toolkit.createText(form.getBody(), "", SWT.WRAP
 				| SWT.V_SCROLL);
@@ -154,14 +152,11 @@ public final class PublishPart {
 
 				if (textPublishMetric != null
 						&& !"".equals(textPublishMetric.getText())) {
-					final Properties properties = PayloadUtil
-							.parsePayloadFromString(textPublishMetric.getText());
-
-					final Enumeration enumeration = properties.propertyNames();
-
-					while (enumeration.hasMoreElements()) {
-						final String key = (String) enumeration.nextElement();
-						payload.addMetric(key, properties.getProperty(key));
+					final String inputText = textPublishMetric.getText();
+					try {
+						payload.setBody(inputText.getBytes("UTF-8"));
+					} catch (final UnsupportedEncodingException e1) {
+						e1.printStackTrace();
 					}
 				}
 				mqttClient.publish(textTopic.getText(), payload);
@@ -174,7 +169,7 @@ public final class PublishPart {
 					hint = generateHintSubscriptionTopic(textTopic.getText(),
 							textRequestId.getText(),
 							textRequesterClientId.getText());
-				} catch (final Exception e) {
+				} catch (final ArrayIndexOutOfBoundsException e) {
 					openError(parent.getShell(), "Error in Topic",
 							"Kura Specific Topic is invalid");
 				}

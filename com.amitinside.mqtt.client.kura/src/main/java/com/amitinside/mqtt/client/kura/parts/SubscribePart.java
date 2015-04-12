@@ -87,7 +87,7 @@ public final class SubscribePart {
 		textTopic.setMessage("TOPIC/NAMESPACE/EXAMPLE");
 		applyGridData(textTopic).withHorizontalFill();
 
-		label = toolkit.createLabel(form.getBody(), "Response Metrics ",
+		label = toolkit.createLabel(form.getBody(), "Response Payload ",
 				SWT.NULL);
 		textResponseMetrics = toolkit.createText(form.getBody(), "",
 				SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL);
