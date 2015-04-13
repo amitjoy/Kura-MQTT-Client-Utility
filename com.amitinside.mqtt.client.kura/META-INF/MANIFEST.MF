@@ -5,7 +5,8 @@ Bundle-SymbolicName: com.amitinside.mqtt.client.kura;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Amit Kumar Mondal
 Require-Bundle: javax.annotation,
- javax.inject
+ javax.inject,
+ org.eclipse.e4.core.di
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Import-Package: com.amitinside.e4.bundleresourceloader,
  com.amitinside.mqtt.client,
@@ -26,6 +27,7 @@ Import-Package: com.amitinside.e4.bundleresourceloader,
  org.eclipse.e4.ui.model.application,
  org.eclipse.e4.ui.model.application.ui,
  org.eclipse.e4.ui.model.application.ui.basic,
+ org.eclipse.e4.ui.services,
  org.eclipse.e4.ui.workbench,
  org.eclipse.e4.ui.workbench.lifecycle,
  org.eclipse.e4.ui.workbench.modeling,
@@ -41,4 +43,3 @@ Import-Package: com.amitinside.e4.bundleresourceloader,
  org.eclipse.swt.widgets,
  org.eclipse.ui.forms.widgets,
  org.mihalis.opal.utils
- 

@@ -3,6 +3,7 @@ package com.amitinside.mqtt.client.kura.parts;
 import static com.amitinside.mqtt.client.kura.dialog.ConnectionSettingsDialog.openDialogBox;
 import static com.amitinside.mqtt.client.kura.events.KuraClientEventConstants.CONNECTED_EVENT_TOPIC;
 import static com.amitinside.mqtt.client.kura.events.KuraClientEventConstants.DISCONNECTED_EVENT_TOPIC;
+import static com.amitinside.mqtt.client.kura.events.KuraClientEventConstants.FILE_CONTENT_RETRIVAL_EVENT_TOPIC;
 import static com.amitinside.mqtt.client.kura.util.FormUtil.OFFLINE_STATUS_IMAGE;
 import static com.amitinside.mqtt.client.kura.util.FormUtil.ONLINE_STATUS_IMAGE;
 import static com.amitinside.mqtt.client.kura.util.FormUtil.safelySetToolbarImage;
@@ -25,6 +26,7 @@ import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
+import org.eclipse.e4.ui.services.EMenuService;
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -57,16 +59,18 @@ public final class PublishPart {
 	private final UISynchronize uiSynchronize;
 	private final IBundleResourceLoader bundleResourceService;
 	private final MWindow window;
+	private final EMenuService menuService;
 	private Button buttonPublish;
 
 	@Inject
 	public PublishPart(MApplication application, IEclipseContext context,
 			IEventBroker broker, UISynchronize uiSynchronize,
 			@Optional IBundleResourceLoader bundleResourceService,
-			MWindow window) {
+			MWindow window, EMenuService menuService) {
 		this.broker = broker;
 		this.uiSynchronize = uiSynchronize;
 		this.window = window;
+		this.menuService = menuService;
 		this.mqttClient = context.get(KuraMQTTClient.class);
 		this.bundleResourceService = context.get(IBundleResourceLoader.class);
 	}
@@ -177,6 +181,7 @@ public final class PublishPart {
 			}
 
 		});
+		regsiterMenu(textPublishMetric);
 
 		applyGridData(buttonPublish).horizontalSpan(2).horizontalAlignment(
 				GridData.END);
@@ -191,6 +196,11 @@ public final class PublishPart {
 
 		form.updateToolBar();
 
+	}
+
+	private void regsiterMenu(Text textPublishMetric) {
+		menuService.registerContextMenu(textPublishMetric,
+				"com.amitinside.mqtt.client.kura.popupmenu.filechooser");
 	}
 
 	private void defaultSetImage(Form form) {
@@ -229,5 +239,13 @@ public final class PublishPart {
 		safelySetToolbarImage(form, uiSynchronize, bundleResourceService,
 				OFFLINE_STATUS_IMAGE);
 		setTootipConnectionStatus(uiSynchronize, buttonPublish, null, false);
+	}
+
+	@Inject
+	@Optional
+	public void updateUIWithFileContent(
+			@UIEventTopic(FILE_CONTENT_RETRIVAL_EVENT_TOPIC) final Object message) {
+		if (message != null)
+			textPublishMetric.setText((String) message);
 	}
 }

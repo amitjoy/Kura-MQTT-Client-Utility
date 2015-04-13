@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<application:Application xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:advanced="http://www.eclipse.org/ui/2010/UIModel/application/ui/advanced" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmi:id="_6ctgQN7uEeSi-LhyoCOjzA" elementId="org.eclipse.e4.ide.application" bindingContexts="_6ctgSd7uEeSi-LhyoCOjzA">
+<application:Application xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:advanced="http://www.eclipse.org/ui/2010/UIModel/application/ui/advanced" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmi:id="_6ctgQN7uEeSi-LhyoCOjzA" elementId="org.eclipse.e4.ide.application" bindingContexts="_6ctgSd7uEeSi-LhyoCOjzA">
   <children xsi:type="basic:TrimmedWindow" xmi:id="_6ctgQd7uEeSi-LhyoCOjzA" elementId="com.amitinside.mqtt.client.kura" label="Eclipse Kura MQTT Client Utility" iconURI="" tooltip="Eclipse Kura MQTT Client Utility" x="210" y="200" width="850" height="330">
     <children xsi:type="advanced:PerspectiveStack" xmi:id="_6cuHUN7uEeSi-LhyoCOjzA" elementId="com.amitinside.mqtt.client.kura.perspective.stack">
       <children xsi:type="advanced:Perspective" xmi:id="_6cuHUd7uEeSi-LhyoCOjzA" elementId="com.amitinside.mqtt.client.kura.perspective">
@@ -8,6 +8,9 @@
             <tags>NoMove</tags>
             <children xsi:type="basic:Part" xmi:id="_6cuHVN7uEeSi-LhyoCOjzA" elementId="com.amitinside.mqtt.client.kura.part.publish" contributionURI="bundleclass://com.amitinside.mqtt.client.kura/com.amitinside.mqtt.client.kura.parts.PublishPart" label="Publish" iconURI="platform:/plugin/com.amitinside.mqtt.client.kura/icons/publish.png">
               <tags>NoMove</tags>
+              <menus xsi:type="menu:PopupMenu" xmi:id="_1fvs0OGoEeShKeZ6Ft9F9w" elementId="com.amitinside.mqtt.client.kura.popupmenu.filechooser" label="File Chooser Menu">
+                <children xsi:type="menu:HandledMenuItem" xmi:id="_C2Zk4OGpEeShKeZ6Ft9F9w" elementId="com.amitinside.mqtt.client.kura.handledmenuitem.file.choose" label="Select File" iconURI="platform:/plugin/com.amitinside.mqtt.client.kura/icons/file.png" command="_GMxDwOGpEeShKeZ6Ft9F9w"/>
+              </menus>
             </children>
             <children xsi:type="basic:Part" xmi:id="_SZtE4N7vEeSi-LhyoCOjzA" elementId="com.amitinside.mqtt.client.kura.part.subscribe" contributionURI="bundleclass://com.amitinside.mqtt.client.kura/com.amitinside.mqtt.client.kura.parts.SubscribePart" label="Subscribe" iconURI="platform:/plugin/com.amitinside.mqtt.client.kura/icons/subscribe.png">
               <tags>NoMove</tags>
@@ -30,6 +33,7 @@
   </children>
   <handlers xmi:id="_6ctgTd7uEeSi-LhyoCOjzA" elementId="com.amitinside.mqtt.client.kura.handler.quitCommand" contributionURI="bundleclass://com.amitinside.mqtt.client.kura/com.amitinside.mqtt.client.kura.handlers.QuitHandler" command="_6ctgTN7uEeSi-LhyoCOjzA"/>
   <handlers xmi:id="_6ctgV97uEeSi-LhyoCOjzA" elementId="com.amitinside.mqtt.client.kura.handler.aboutCommand" contributionURI="bundleclass://com.amitinside.mqtt.client.kura/com.amitinside.mqtt.client.kura.handlers.AboutHandler" command="_6ctgVt7uEeSi-LhyoCOjzA"/>
+  <handlers xmi:id="_JTj1kOGpEeShKeZ6Ft9F9w" elementId="com.amitinside.mqtt.client.kura.handler.choose.file" contributionURI="bundleclass://com.amitinside.mqtt.client.kura/com.amitinside.mqtt.client.kura.handlers.SelectFileHandler" command="_GMxDwOGpEeShKeZ6Ft9F9w"/>
   <bindingTables xmi:id="_6ctgTt7uEeSi-LhyoCOjzA" bindingContext="_6ctgSd7uEeSi-LhyoCOjzA">
     <bindings xmi:id="_6ctgT97uEeSi-LhyoCOjzA" keySequence="M1+Q" command="_6ctgTN7uEeSi-LhyoCOjzA"/>
     <bindings xmi:id="_6ctgUt7uEeSi-LhyoCOjzA" keySequence="M1+O"/>
@@ -42,6 +46,7 @@
   </rootContext>
   <commands xmi:id="_6ctgTN7uEeSi-LhyoCOjzA" elementId="org.eclipse.ui.file.exit" commandName="quitCommand"/>
   <commands xmi:id="_6ctgVt7uEeSi-LhyoCOjzA" elementId="org.eclipse.ui.help.aboutAction" commandName="aboutCommand"/>
+  <commands xmi:id="_GMxDwOGpEeShKeZ6Ft9F9w" elementId="com.amitinside.mqtt.client.kura.command.choose.file" commandName="Select FIle"/>
   <addons xmi:id="_6ctgQt7uEeSi-LhyoCOjzA" elementId="org.eclipse.e4.core.commands.service" contributionURI="bundleclass://org.eclipse.e4.core.commands/org.eclipse.e4.core.commands.CommandServiceAddon"/>
   <addons xmi:id="_6ctgQ97uEeSi-LhyoCOjzA" elementId="org.eclipse.e4.ui.contexts.service" contributionURI="bundleclass://org.eclipse.e4.ui.services/org.eclipse.e4.ui.services.ContextServiceAddon"/>
   <addons xmi:id="_6ctgRN7uEeSi-LhyoCOjzA" elementId="org.eclipse.e4.ui.bindings.service" contributionURI="bundleclass://org.eclipse.e4.ui.bindings/org.eclipse.e4.ui.bindings.BindingServiceAddon"/>
