@@ -164,24 +164,10 @@ public final class PublishPart {
 					}
 				}
 				mqttClient.publish(textTopic.getText(), payload);
-				createSubscriptionHint();
+				createSubscriptionHint(parent);
 			}
-
-			private void createSubscriptionHint() {
-				String hint = "";
-				try {
-					hint = generateHintSubscriptionTopic(textTopic.getText(),
-							textRequestId.getText(),
-							textRequesterClientId.getText());
-				} catch (final ArrayIndexOutOfBoundsException e) {
-					openError(parent.getShell(), "Error in Topic",
-							"Kura Specific Topic is invalid");
-				}
-				textSubscribeTopicHint.setText(hint);
-			}
-
 		});
-		regsiterMenu(textPublishMetric);
+		regsiterMenuOn(textPublishMetric);
 
 		applyGridData(buttonPublish).horizontalSpan(2).horizontalAlignment(
 				GridData.END);
@@ -198,9 +184,21 @@ public final class PublishPart {
 
 	}
 
-	private void regsiterMenu(Text textPublishMetric) {
+	private void regsiterMenuOn(Text textPublishMetric) {
 		menuService.registerContextMenu(textPublishMetric,
 				"com.amitinside.mqtt.client.kura.popupmenu.filechooser");
+	}
+
+	private void createSubscriptionHint(Composite parent) {
+		String hint = "";
+		try {
+			hint = generateHintSubscriptionTopic(textTopic.getText(),
+					textRequestId.getText(), textRequesterClientId.getText());
+		} catch (final ArrayIndexOutOfBoundsException e) {
+			openError(parent.getShell(), "Error in Topic",
+					"Kura Specific Topic is invalid");
+		}
+		textSubscribeTopicHint.setText(hint);
 	}
 
 	private void defaultSetImage(Form form) {
