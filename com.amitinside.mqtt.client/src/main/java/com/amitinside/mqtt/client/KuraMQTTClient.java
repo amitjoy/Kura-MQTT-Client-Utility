@@ -13,6 +13,10 @@ public interface KuraMQTTClient {
 		}
 	}
 
+	public static final String PORT = "1883";
+
+	public static final String PROTOCOL = "tcp";
+
 	public void publish(final String channel, KuraPayload payload);
 
 	public void subscribe(final String channel, final MessageListener callback);

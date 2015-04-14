@@ -287,6 +287,15 @@ public class KuraMQTTClientImpl implements KuraMQTTClient {
 	 */
 	@Override
 	public void disconnect() {
+		try {
+			connectionLock.tryLock(5, TimeUnit.SECONDS);
+			safelyDisconnect();
+		} catch (final Exception e) {
+			logTracker.log("Exception while disconnecting");
+		}
+	}
+
+	private void safelyDisconnect() {
 		if (connection != null) {
 			connection.disconnect(new Callback<Void>() {
 				@Override
@@ -303,7 +312,7 @@ public class KuraMQTTClientImpl implements KuraMQTTClient {
 	}
 
 	private String hostToURI(String host) {
-		return "tcp://" + host + ":1883";
+		return PROTOCOL + "://" + host + ":" + PORT;
 	}
 
 	@Override
