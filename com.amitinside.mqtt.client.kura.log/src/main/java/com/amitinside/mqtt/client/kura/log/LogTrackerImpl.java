@@ -25,6 +25,7 @@ public class LogTrackerImpl implements LogTracker {
 			this.eventAdmin = null;
 	}
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void log(String message) {
 		if (message != null) {

@@ -3,7 +3,6 @@
 
 <product name="Eclipse Kura MQTT Client Utility" uid="com.amitinside.mqtt.client.kura" id="com.amitinside.mqtt.client.kura.product" application="org.eclipse.e4.ui.workbench.swt.E4Application" version="1.0.0.qualifier" useFeatures="true" includeLaunchers="true">
 
-
    <configIni use="default">
    </configIni>
 
@@ -18,20 +17,17 @@
 
    <splash
       location="com.amitinside.mqtt.client.kura" />
-   <launcher name="KuraMQTTClientUtility">
+   <launcher name="Eclipse Kura MQTT Client Utility">
       <macosx icon="/com.amitinside.mqtt.client.kura/images/KuraMQTTClientUtil.icns"/>
       <solaris/>
-      <win useIco="true">
-         <ico path="/com.amitinside.mqtt.client.kura/images/KuraMQTTClientUtil.ico"/>
+      <win useIco="false">
          <bmp/>
       </win>
    </launcher>
 
-
    <vm>
       <macos include="false">org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7</macos>
    </vm>
-
 
    <plugins>
       <plugin id="ch.qos.logback.classic"/>
@@ -40,6 +36,7 @@
       <plugin id="com.amitinside.e4.bundleresourceloader"/>
       <plugin id="com.amitinside.mqtt.client"/>
       <plugin id="com.amitinside.mqtt.client.kura"/>
+      <plugin id="com.amitinside.mqtt.client.kura.events"/>
       <plugin id="com.amitinside.mqtt.client.kura.log"/>
       <plugin id="com.amitinside.mqtt.client.kura.payload"/>
       <plugin id="com.amitinside.mqtt.client.kura.payload.operator"/>
@@ -184,6 +181,7 @@
       <plugin id="org.eclipse.ui.workbench.texteditor"/>
       <plugin id="org.eclipse.wst.common.core"/>
       <plugin id="org.eclipse.wst.common.emf"/>
+      <plugin id="org.eclipse.wst.common.emfworkbench.integration"/>
       <plugin id="org.eclipse.wst.common.environment"/>
       <plugin id="org.eclipse.wst.common.frameworks"/>
       <plugin id="org.eclipse.wst.common.project.facet.core"/>
@@ -193,6 +191,7 @@
       <plugin id="org.eclipse.wst.xml.core"/>
       <plugin id="org.eclipse.wst.xsd.core"/>
       <plugin id="org.eclipse.xsd"/>
+      <plugin id="org.mihalis.opal"/>
       <plugin id="org.slf4j.api"/>
       <plugin id="org.slf4j.impl.log4j12" fragment="true"/>
       <plugin id="org.w3c.css.sac"/>
@@ -209,14 +208,6 @@
    </features>
 
    <configurations>
-      <plugin id="com.amitinside.e4.bundleresourceloader" autoStart="true" startLevel="0" />
-      <plugin id="com.amitinside.mqtt.client" autoStart="true" startLevel="0" />
-      <plugin id="com.amitinside.mqtt.client.kura" autoStart="true" startLevel="0" />
-      <plugin id="com.amitinside.mqtt.client.kura.events" autoStart="true" startLevel="0" />
-      <plugin id="com.amitinside.mqtt.client.kura.log" autoStart="true" startLevel="0" />
-      <plugin id="com.amitinside.mqtt.client.kura.payload" autoStart="true" startLevel="0" />
-      <plugin id="com.amitinside.mqtt.client.kura.payload.operator" autoStart="true" startLevel="0" />
-      <plugin id="com.amitinside.swt.layout.utility" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.core.runtime" autoStart="true" startLevel="0" />
       <plugin id="org.eclipse.equinox.common" autoStart="true" startLevel="2" />
       <plugin id="org.eclipse.equinox.ds" autoStart="true" startLevel="2" />

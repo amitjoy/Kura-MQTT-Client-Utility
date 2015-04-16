@@ -8,7 +8,7 @@ import javax.inject.Inject;
 
 import org.eclipse.e4.core.contexts.IEclipseContext;
 import org.eclipse.e4.core.di.annotations.Optional;
-import org.eclipse.e4.core.di.extensions.EventTopic;
+import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.workbench.modeling.EPartService;
 import org.eclipse.jface.action.Action;
@@ -66,7 +66,7 @@ public final class LogViewPart {
 
 	@Inject
 	@Optional
-	public void updateForm(@EventTopic(LOG_EVENT_TOPIC) Object obj) {
+	public void updateForm(@UIEventTopic(LOG_EVENT_TOPIC) Object obj) {
 		synchronize.asyncExec(new Runnable() {
 			@Override
 			public void run() {

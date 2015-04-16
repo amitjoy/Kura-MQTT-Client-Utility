@@ -19,11 +19,11 @@ public class AboutDialog extends TitleAreaDialog {
 
 	private Text txtAboutInformation;
 
-	private AboutDialog(Shell parentShell) {
+	private AboutDialog(final Shell parentShell) {
 		super(parentShell);
 	}
 
-	public static void openDialogBox(Shell parent) {
+	public static void openDialogBox(final Shell parent) {
 		final AboutDialog dialog = new AboutDialog(parent);
 		dialog.create();
 		if (dialog.open() == Window.OK) {
