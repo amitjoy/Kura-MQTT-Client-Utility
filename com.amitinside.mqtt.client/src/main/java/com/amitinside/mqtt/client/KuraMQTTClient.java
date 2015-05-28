@@ -28,8 +28,6 @@ public interface KuraMQTTClient {
 		}
 	}
 
-	public static final String PORT = "1883";
-
 	public static final String PROTOCOL = "tcp";
 
 	public void publish(final String channel, KuraPayload payload);
@@ -46,7 +44,10 @@ public interface KuraMQTTClient {
 
 	public void disconnect();
 
-	public boolean connect(String host, String clientId);
+	public boolean connect(String host, String port, String clientId);
+
+	public boolean connect(String host, String port, String clientId,
+			String username, String password);
 
 	public boolean isConnected();
 

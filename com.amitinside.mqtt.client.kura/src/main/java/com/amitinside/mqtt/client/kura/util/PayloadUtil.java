@@ -39,7 +39,7 @@ public final class PayloadUtil {
 	public static String parsePayloadFromProto(Map<String, Object> map) {
 		final Properties properties = new Properties();
 		for (final Map.Entry<String, Object> entry : map.entrySet()) {
-			properties.setProperty(entry.getKey(), (String) entry.getValue());
+			properties.setProperty(entry.getKey(), entry.getValue().toString());
 		}
 		final StringWriter writer = new StringWriter();
 		properties.list(new PrintWriter(writer));

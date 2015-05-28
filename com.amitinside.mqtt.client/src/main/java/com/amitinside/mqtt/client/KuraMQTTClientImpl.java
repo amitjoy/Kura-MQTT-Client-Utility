@@ -17,6 +17,7 @@ package com.amitinside.mqtt.client;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -75,15 +76,24 @@ public class KuraMQTTClientImpl implements KuraMQTTClient {
 	}
 
 	@Override
-	public boolean connect(String host, String clientId) {
+	public boolean connect(String host, String port, String clientId) {
+		return this.connect(host, port, clientId, null, null);
+	}
 
+	@Override
+	public boolean connect(String host, String port, String clientId,
+			String username, String password) {
+
+		System.out.println(username.equals(""));
 		this.host = host;
 		this.clientId = clientId;
 
 		final MQTT mqtt = new MQTT();
 		try {
-			mqtt.setHost(hostToURI(host));
+			mqtt.setHost(hostToURI(host, port));
 			mqtt.setClientId(clientId);
+			mqtt.setPassword(username);
+			mqtt.setUserName(password);
 		} catch (final URISyntaxException e) {
 			logTracker.log("Invalid Host URL");
 		}
@@ -126,6 +136,8 @@ public class KuraMQTTClientImpl implements KuraMQTTClient {
 				if (channels.containsKey(mqttChannel.toString())) {
 					final KuraPayloadDecoder decoder = new KuraPayloadDecoder(
 							mqttMessage.toByteArray());
+					System.out.println(Arrays.toString(mqttMessage
+							.toByteArray()));
 					try {
 						channels.get(mqttChannel.toString()).processMessage(
 								decoder.buildFromByteArray());
@@ -326,8 +338,8 @@ public class KuraMQTTClientImpl implements KuraMQTTClient {
 		}
 	}
 
-	private String hostToURI(String host) {
-		return PROTOCOL + "://" + host + ":" + PORT;
+	private String hostToURI(String host, String port) {
+		return PROTOCOL + "://" + host + ":" + port;
 	}
 
 	@Override

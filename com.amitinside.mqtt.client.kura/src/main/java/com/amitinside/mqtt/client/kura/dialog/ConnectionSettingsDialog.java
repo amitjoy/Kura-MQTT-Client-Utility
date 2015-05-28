@@ -22,8 +22,6 @@ import static com.amitinside.swt.layout.grid.GridDataUtil.applyGridData;
 import static org.eclipse.jface.dialogs.IMessageProvider.INFORMATION;
 import static org.eclipse.jface.dialogs.MessageDialog.openError;
 
-import java.util.List;
-
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
@@ -55,9 +53,15 @@ public class ConnectionSettingsDialog extends TitleAreaDialog {
 	private Text txtClientId;
 	private Combo helpServersCombo;
 
+	private static Text txtMqttServerUsername;
+	private static Text txtMqttServerPassword;
+	private static Text txtMqttServerPort;
+
 	private static String mqttServerAddress;
+	private static String mqttServerUsername;
+	private static String mqttServerPassword;
+	private static String mqttServerPort;
 	private static String clientId;
-	private static List<String> listOfTestServers;
 
 	private static String eclipseServer = "";
 	private static String mosquittoServer = "";
@@ -104,8 +108,11 @@ public class ConnectionSettingsDialog extends TitleAreaDialog {
 			synchronize.asyncExec(new Runnable() {
 				@Override
 				public void run() {
-					final boolean status = mqttClient.connect(
-							mqttServerAddress, clientId);
+					boolean status = false;
+					status = mqttClient.connect(mqttServerAddress,
+							mqttServerPort, clientId, mqttServerUsername,
+							mqttServerPassword);
+
 					if (status)
 						broker.post(CONNECTED_EVENT_TOPIC, new String[] {
 								mqttServerAddress, clientId });
@@ -145,6 +152,9 @@ public class ConnectionSettingsDialog extends TitleAreaDialog {
 
 		createSomeTestServersDropdown(container);
 		createMQTTServerAddress(container);
+		createMQTTServerPort(container);
+		createMQTTServerUsername(container);
+		createMQTTServerPassword(container);
 		createClientId(container);
 
 		return area;
@@ -179,6 +189,7 @@ public class ConnectionSettingsDialog extends TitleAreaDialog {
 				default:
 					break;
 				}
+				txtMqttServerPort.setText("1883");
 			}
 		});
 
@@ -197,6 +208,48 @@ public class ConnectionSettingsDialog extends TitleAreaDialog {
 			txtMqttServerAddress.setText(mqttServerAddress);
 
 		applyGridData(txtMqttServerAddress).grabExcessHorizontalSpace(true)
+				.horizontalAlignment(GridData.FILL);
+	}
+
+	private void createMQTTServerUsername(Composite container) {
+		final Label lbtMQTTServerUsername = new Label(container, SWT.NONE);
+		lbtMQTTServerUsername.setText("Username");
+
+		txtMqttServerUsername = new Text(container, SWT.BORDER);
+		txtMqttServerUsername.setMessage("MQTT Server Username");
+
+		if (mqttServerUsername != null && !"".equals(mqttServerUsername))
+			txtMqttServerUsername.setText(mqttServerUsername);
+
+		applyGridData(txtMqttServerUsername).grabExcessHorizontalSpace(true)
+				.horizontalAlignment(GridData.FILL);
+	}
+
+	private void createMQTTServerPassword(Composite container) {
+		final Label lbtMQTTServerPassword = new Label(container, SWT.NONE);
+		lbtMQTTServerPassword.setText("Password");
+
+		txtMqttServerPassword = new Text(container, SWT.BORDER);
+		txtMqttServerPassword.setMessage("MQTT Server Password");
+
+		if (mqttServerPassword != null && !"".equals(mqttServerPassword))
+			txtMqttServerPassword.setText(mqttServerPassword);
+
+		applyGridData(txtMqttServerPassword).grabExcessHorizontalSpace(true)
+				.horizontalAlignment(GridData.FILL);
+	}
+
+	private void createMQTTServerPort(Composite container) {
+		final Label lbtMQTTServerPort = new Label(container, SWT.NONE);
+		lbtMQTTServerPort.setText("Port");
+
+		txtMqttServerPort = new Text(container, SWT.BORDER);
+		txtMqttServerPort.setMessage("MQTT Server Port");
+
+		if (mqttServerPort != null && !"".equals(mqttServerPort))
+			txtMqttServerPort.setText(mqttServerPort);
+
+		applyGridData(txtMqttServerPort).grabExcessHorizontalSpace(true)
 				.horizontalAlignment(GridData.FILL);
 	}
 
@@ -222,7 +275,9 @@ public class ConnectionSettingsDialog extends TitleAreaDialog {
 	private void saveInput() {
 		mqttServerAddress = txtMqttServerAddress.getText();
 		clientId = txtClientId.getText();
-
+		mqttServerPassword = txtMqttServerPassword.getText();
+		mqttServerUsername = txtMqttServerUsername.getText();
+		mqttServerPort = txtMqttServerPort.getText();
 	}
 
 	@Override
@@ -246,4 +301,43 @@ public class ConnectionSettingsDialog extends TitleAreaDialog {
 	public void setClientId(String clientId) {
 		this.clientId = clientId;
 	}
+
+	/**
+	 * @return the mqttServerUsername
+	 */
+	public String getMqttServerUsername() {
+		return mqttServerUsername;
+	}
+
+	/**
+	 * @param mqttServerUsername
+	 *            the mqttServerUsername to set
+	 */
+	public void setMqttServerUsername(String mqttServerUsername) {
+		ConnectionSettingsDialog.mqttServerUsername = mqttServerUsername;
+	}
+
+	/**
+	 * @return the mqttServerPassword
+	 */
+	public String getMqttServerPassword() {
+		return mqttServerPassword;
+	}
+
+	/**
+	 * @param mqttServerPassword
+	 *            the mqttServerPassword to set
+	 */
+	public void setMqttServerPassword(String mqttServerPassword) {
+		ConnectionSettingsDialog.mqttServerPassword = mqttServerPassword;
+	}
+
+	public String getMqttServerPort() {
+		return mqttServerPort;
+	}
+
+	public void setMqttServerPort(String mqttServerPort) {
+		ConnectionSettingsDialog.mqttServerPort = mqttServerPort;
+	}
+
 }
