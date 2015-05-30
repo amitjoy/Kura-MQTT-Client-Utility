@@ -165,7 +165,6 @@ public class KuraMQTTClientImpl implements KuraMQTTClient {
 			public void onFailure(Throwable throwable) {
 				errorMsg = "Impossible to CONNECT to the MQTT server, terminating";
 				logTracker.log(errorMsg);
-				exceptionOccurred(errorMsg);
 			}
 
 		});
