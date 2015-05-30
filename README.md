@@ -19,7 +19,7 @@ The main motive of developing this application is to use Eclipse Kura's CRUD lik
 ### **What is this repository for?** ###
 
 * E4 Application source for Kura MQTT Client Utility
-* 1.0.0
+* 1.1.0
 
 ### **How do I get set up?** ###
 
