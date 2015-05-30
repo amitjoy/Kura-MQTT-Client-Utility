@@ -45,7 +45,7 @@ The main motive of developing this application is to use Eclipse Kura's CRUD lik
 * Put it in your **plugins** folder which you will find in your Eclipse folder
 * Again you have to restart your IDE
 * Download all the projects and import all of them into your workspace
-* Dowuble click on **com.amitinside.mqtt.client.kura.product** placed under **com.amitinside.mqtt.client.kura.product** project
+* Double click on **com.amitinside.mqtt.client.kura.product** placed under **com.amitinside.mqtt.client.kura.product** project
 * Then click on **Launch an Eclipse Application**
 
 ### **Who do I talk to?** ###
