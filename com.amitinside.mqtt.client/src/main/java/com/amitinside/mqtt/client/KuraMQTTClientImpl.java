@@ -17,7 +17,6 @@ package com.amitinside.mqtt.client;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -92,8 +91,8 @@ public class KuraMQTTClientImpl implements KuraMQTTClient {
 		try {
 			mqtt.setHost(hostToURI(host, port));
 			mqtt.setClientId(clientId);
-			mqtt.setPassword(username);
-			mqtt.setUserName(password);
+			mqtt.setPassword(password);
+			mqtt.setUserName(username);
 		} catch (final URISyntaxException e) {
 			logTracker.log("Invalid Host URL");
 		}
@@ -136,8 +135,7 @@ public class KuraMQTTClientImpl implements KuraMQTTClient {
 				if (channels.containsKey(mqttChannel.toString())) {
 					final KuraPayloadDecoder decoder = new KuraPayloadDecoder(
 							mqttMessage.toByteArray());
-					System.out.println(Arrays.toString(mqttMessage
-							.toByteArray()));
+
 					try {
 						channels.get(mqttChannel.toString()).processMessage(
 								decoder.buildFromByteArray());
