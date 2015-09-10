@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Utility
+Bundle-SymbolicName: com.amitinside.swt.layout.utility
+Bundle-Version: 1.0.0.qualifier
+Bundle-Vendor: AMITINSIDE
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Import-Package: org.eclipse.swt,
+ org.eclipse.swt.layout,
+ org.eclipse.swt.widgets
+Export-Package: com.amitinside.swt.layout.form,
+ com.amitinside.swt.layout.grid

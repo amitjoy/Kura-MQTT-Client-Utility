@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" name="Log Tracker">
+   <implementation class="com.amitinside.mqtt.client.kura.log.LogTrackerImpl"/>
+   <service>
+      <provide interface="com.amitinside.mqtt.client.kura.log.LogTracker"/>
+   </service>
+   <reference bind="bindEventAdmin" cardinality="1..1" interface="org.osgi.service.event.EventAdmin" name="EventAdmin" policy="static" unbind="unbindEventAdmin"/>
+</scr:component>

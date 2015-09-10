@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+
+   <extension
+         id="product"
+         point="org.eclipse.core.runtime.products">
+      <product
+            name="Eclipse Kura MQTT Client Utility"
+            application="org.eclipse.e4.ui.workbench.swt.E4Application">
+         <property
+               name="appName"
+               value="Eclipse Kura MQTT Client Utility">
+         </property>
+         <property
+               name="lifeCycleURI"
+               value="bundleclass://com.amitinside.mqtt.client.kura/com.amitinside.mqtt.client.kura.lifecycle.Manager">
+         </property>
+      </product>
+   </extension>
+</plugin>
