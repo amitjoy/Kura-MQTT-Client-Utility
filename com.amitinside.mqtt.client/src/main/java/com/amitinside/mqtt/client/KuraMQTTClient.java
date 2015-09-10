@@ -143,11 +143,11 @@ public class KuraMQTTClient implements IKuraMQTTClient {
 		this.connectionLock = new ReentrantLock();
 	}
 
-	protected void activate(final ComponentContext context) {
+	protected synchronized void activate(final ComponentContext context) {
 		LOGGER.debug("Activating Service Component");
 	}
 
-	protected void bindLogTracker(final LogTracker logTracker) {
+	protected synchronized void bindLogTracker(final LogTracker logTracker) {
 		KuraMQTTClient.logTracker = logTracker;
 	}
 
@@ -187,7 +187,7 @@ public class KuraMQTTClient implements IKuraMQTTClient {
 		return this.isConnected;
 	}
 
-	protected void deactivate(final ComponentContext context) {
+	protected synchronized void deactivate(final ComponentContext context) {
 		LOGGER.debug("Dectivating Service Component");
 	}
 
@@ -397,7 +397,7 @@ public class KuraMQTTClient implements IKuraMQTTClient {
 		}
 	}
 
-	protected void unbindLogTracker(final LogTracker logTracker) {
+	protected synchronized void unbindLogTracker(final LogTracker logTracker) {
 		if (KuraMQTTClient.logTracker == logTracker) {
 			KuraMQTTClient.logTracker = null;
 		}

@@ -30,9 +30,6 @@
    </vm>
 
    <plugins>
-      <plugin id="ch.qos.logback.classic"/>
-      <plugin id="ch.qos.logback.core"/>
-      <plugin id="ch.qos.logback.slf4j" fragment="true"/>
       <plugin id="com.amitinside.e4.bundleresourceloader"/>
       <plugin id="com.amitinside.mqtt.client"/>
       <plugin id="com.amitinside.mqtt.client.kura"/>

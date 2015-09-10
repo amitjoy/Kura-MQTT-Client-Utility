@@ -222,7 +222,6 @@ public final class PublishPart {
 	@Inject
 	@Optional
 	public void updateUIWithClientIdAndConnectionStatus(@UIEventTopic(CONNECTED_EVENT_TOPIC) final Object message) {
-		System.out.println("In Publish Part");
 		if (message instanceof Object[]) {
 			this.uiSynchronize.asyncExec(new Runnable() {
 				@Override
