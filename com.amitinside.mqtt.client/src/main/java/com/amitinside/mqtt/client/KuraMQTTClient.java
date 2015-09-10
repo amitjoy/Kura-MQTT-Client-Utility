@@ -15,9 +15,10 @@
  *******************************************************************************/
 package com.amitinside.mqtt.client;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
@@ -42,8 +43,8 @@ import com.amitinside.mqtt.client.kura.log.LogTracker;
 import com.amitinside.mqtt.client.kura.message.KuraPayload;
 import com.amitinside.mqtt.client.kura.message.payload.operator.KuraPayloadDecoder;
 import com.amitinside.mqtt.client.kura.message.payload.operator.KuraPayloadEncoder;
-import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
+import com.google.common.collect.Maps;
 
 /**
  * Implementation of {@link IKuraMQTTClient}
@@ -52,7 +53,7 @@ import com.google.common.base.Throwables;
  * @see IKuraMQTTClient
  *
  */
-public class KuraMQTTClient implements IKuraMQTTClient {
+public final class KuraMQTTClient implements IKuraMQTTClient {
 
 	/**
 	 * Kura Client Builder
@@ -155,9 +156,9 @@ public class KuraMQTTClient implements IKuraMQTTClient {
 	@Override
 	public boolean connect() {
 
-		Preconditions.checkNotNull(this.host);
-		Preconditions.checkNotNull(this.port);
-		Preconditions.checkNotNull(this.clientId);
+		checkNotNull(this.host);
+		checkNotNull(this.port);
+		checkNotNull(this.clientId);
 
 		final MQTT mqtt = new MQTT();
 
@@ -276,7 +277,7 @@ public class KuraMQTTClient implements IKuraMQTTClient {
 			this.disconnect();
 		}
 		// Initialize channels
-		this.channels = new HashMap<>();
+		this.channels = Maps.newHashMap();
 		// Register callbacks
 		this.connection = mqtt.callbackConnection();
 		this.connection.listener(new Listener() {
