@@ -25,6 +25,7 @@ import static org.eclipse.jface.dialogs.MessageDialog.openError;
 import org.eclipse.e4.core.services.events.IEventBroker;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -39,109 +40,133 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.amitinside.mqtt.client.IKuraMQTTClient;
 import com.amitinside.mqtt.client.KuraMQTTClient;
 
-public class ConnectionSettingsDialog extends TitleAreaDialog {
+public final class ConnectionSettingsDialog extends TitleAreaDialog {
 
-	private volatile static KuraMQTTClient mqttClient;
-
-	private final IEventBroker broker;
-	private final UISynchronize synchronize;
-	private final MWindow window;
-
-	private static Text txtMqttServerAddress;
-	private Text txtClientId;
-	private Combo helpServersCombo;
-
-	private static Text txtMqttServerUsername;
-	private static Text txtMqttServerPassword;
-	private static Text txtMqttServerPort;
-
-	private static String mqttServerAddress;
-	private static String mqttServerUsername;
-	private static String mqttServerPassword;
-	private static String mqttServerPort;
 	private static String clientId;
 
+	private static final String DEFAULT_MQTT_PORT = "1883";
+
 	private static String eclipseServer = "";
-	private static String mosquittoServer = "";
-	private static String mqttDashboardServer = "";
 	private static String m2mEclipse = "";
+	private static String mosquittoServer = "";
 
-	private ConnectionSettingsDialog(Shell parentShell,
-			KuraMQTTClient mqttClient, IEventBroker broker,
-			UISynchronize synchronize, MWindow window) {
-		super(parentShell);
-		this.mqttClient = mqttClient;
-		this.broker = broker;
-		this.synchronize = synchronize;
-		this.window = window;
-	}
+	private volatile static IKuraMQTTClient mqttClient;
+	private static String mqttDashboardServer = "";
+	private static String mqttServerAddress;
 
-	public static void openDialogBox(Shell shell,
-			final KuraMQTTClient mqttClient, final IEventBroker broker,
-			UISynchronize synchronize, MWindow window) {
-		final ConnectionSettingsDialog dialog = new ConnectionSettingsDialog(
-				shell, mqttClient, broker, synchronize, window);
+	private static String mqttServerPassword;
+	private static String mqttServerPort;
+	private static String mqttServerUsername;
+
+	private static Text txtMqttServerAddress;
+	private static Text txtMqttServerPassword;
+	private static Text txtMqttServerPort;
+	private static Text txtMqttServerUsername;
+
+	public static void openDialogBox(final Shell shell, final IKuraMQTTClient mqttClient, final IEventBroker broker,
+			final UISynchronize synchronize, final MWindow window) {
+		final ConnectionSettingsDialog dialog = new ConnectionSettingsDialog(shell, broker, synchronize, window);
 
 		retriveAllTheTestServers(window);
 
 		dialog.create();
 
-		dialog.setMqttServerAddress(mqttClient.getHost());
-		dialog.setClientId(mqttClient.getClientId());
+		if (mqttClient != null) {
+			dialog.setMqttServerAddress(mqttClient.getHost());
+			dialog.setClientId(mqttClient.getClientId());
+			ConnectionSettingsDialog.mqttClient = mqttClient;
+		}
 
 		if (dialog.open() == Window.OK) {
-			if ("".equals(dialog.getMqttServerAddress())
-					|| dialog.getMqttServerAddress() == null) {
-				openError(shell, "Error in MQTT Server Address",
-						"MQTT Server Address can't be empty");
+			if ("".equals(dialog.getMqttServerAddress()) || (dialog.getMqttServerAddress() == null)) {
+				openError(shell, "Error in MQTT Server Address", "MQTT Server Address can't be empty");
 				return;
 			}
 
-			if ("".equals(dialog.getClientId()) || dialog.getClientId() == null) {
-				openError(shell, "Error in Client ID",
-						"Client ID can't be empty");
+			if ("".equals(dialog.getClientId()) || (dialog.getClientId() == null)) {
+				openError(shell, "Error in Client ID", "Client ID can't be empty");
 				return;
+			}
+
+			if (mqttClient == null) {
+				ConnectionSettingsDialog.mqttClient = new KuraMQTTClient.Builder().setHost(mqttServerAddress)
+						.setPort(mqttServerPort).setClientId(clientId).build();
 			}
 
 			synchronize.asyncExec(new Runnable() {
 				@Override
 				public void run() {
 					boolean status = false;
-					status = mqttClient.connect(mqttServerAddress,
-							mqttServerPort, clientId, mqttServerUsername,
-							mqttServerPassword);
+					try {
+						status = ConnectionSettingsDialog.mqttClient.connect();
+					} catch (final Exception e) {
+						MessageDialog.openError(shell, "Connection Problem",
+								"Something bad happened to the connection");
+						return;
+					}
 
-					if (status)
-						broker.post(CONNECTED_EVENT_TOPIC, new String[] {
-								mqttServerAddress, clientId });
-					else
-						broker.post(DISCONNECTED_EVENT_TOPIC, new String[] {
-								mqttServerAddress, clientId });
+					if (status) {
+						System.out.println("Status:::" + status);
+						broker.post(CONNECTED_EVENT_TOPIC,
+								new Object[] { mqttServerAddress, clientId, ConnectionSettingsDialog.mqttClient });
+					} else {
+						broker.post(DISCONNECTED_EVENT_TOPIC, new Object[] { mqttServerAddress, clientId });
+					}
 				}
 			});
 		}
 
 	}
 
-	private static void retriveAllTheTestServers(MWindow window) {
+	private static void retriveAllTheTestServers(final MWindow window) {
 		eclipseServer = (String) window.getContext().get("eclipse_broker");
 		mosquittoServer = (String) window.getContext().get("mosquitto_broker");
 		mqttDashboardServer = (String) window.getContext().get("mqttdashboard");
 		m2mEclipse = (String) window.getContext().get("m2m_eclipse");
 	}
 
-	@Override
-	public void create() {
-		super.create();
-		setTitle("Eclipse Kura MQTT Client Connection Settings");
-		setMessage("Configuration parameters for MQTT Server Connection",
-				INFORMATION);
+	private final IEventBroker broker;
+	private Combo helpServersCombo;
+	private final UISynchronize synchronize;
+
+	private Text txtClientId;
+
+	private final MWindow window;
+
+	private ConnectionSettingsDialog(final Shell parentShell, final IEventBroker broker,
+			final UISynchronize synchronize, final MWindow window) {
+		super(parentShell);
+		this.broker = broker;
+		this.synchronize = synchronize;
+		this.window = window;
 	}
 
 	@Override
-	protected Control createDialogArea(Composite parent) {
+	public void create() {
+		super.create();
+		this.setTitle("Eclipse Kura MQTT Client Connection Settings");
+		this.setMessage("Configuration parameters for MQTT Server Connection", INFORMATION);
+	}
+
+	private void createClientId(final Composite container) {
+		final Label lbtClientId = new Label(container, SWT.NONE);
+		lbtClientId.setText("Client ID*");
+
+		this.txtClientId = new Text(container, SWT.BORDER);
+		this.txtClientId.setText(clientId());
+
+		if ((clientId != null) && !"".equals(clientId)) {
+			this.txtClientId.setText(clientId);
+		}
+
+		applyGridData(this.txtClientId).grabExcessHorizontalSpace(true).horizontalAlignment(GridData.FILL);
+	}
+
+	@Override
+	protected Control createDialogArea(final Composite parent) {
 		final Composite area = (Composite) super.createDialogArea(parent);
 		final Composite container = new Composite(area, SWT.NONE);
 
@@ -150,30 +175,86 @@ public class ConnectionSettingsDialog extends TitleAreaDialog {
 		applyGridData(container).withFill();
 		container.setLayout(layout);
 
-		createSomeTestServersDropdown(container);
-		createMQTTServerAddress(container);
-		createMQTTServerPort(container);
-		createMQTTServerUsername(container);
-		createMQTTServerPassword(container);
-		createClientId(container);
+		this.createSomeTestServersDropdown(container);
+		this.createMQTTServerAddress(container);
+		this.createMQTTServerPort(container);
+		this.createMQTTServerUsername(container);
+		this.createMQTTServerPassword(container);
+		this.createClientId(container);
 
 		return area;
 	}
 
-	private void createSomeTestServersDropdown(Composite container) {
+	private void createMQTTServerAddress(final Composite container) {
+		final Label lbtMQTTServerName = new Label(container, SWT.NONE);
+		lbtMQTTServerName.setText("MQTT Server Address*");
+
+		txtMqttServerAddress = new Text(container, SWT.BORDER);
+		txtMqttServerAddress.setMessage("test.example.org");
+
+		if ((mqttServerAddress != null) && !"".equals(mqttServerAddress)) {
+			txtMqttServerAddress.setText(mqttServerAddress);
+		}
+
+		applyGridData(txtMqttServerAddress).grabExcessHorizontalSpace(true).horizontalAlignment(GridData.FILL);
+	}
+
+	private void createMQTTServerPassword(final Composite container) {
+		final Label lbtMQTTServerPassword = new Label(container, SWT.NONE);
+		lbtMQTTServerPassword.setText("Password");
+
+		txtMqttServerPassword = new Text(container, SWT.BORDER);
+		txtMqttServerPassword.setMessage("MQTT Server Password");
+
+		if ((mqttServerPassword != null) && !"".equals(mqttServerPassword)) {
+			txtMqttServerPassword.setText(mqttServerPassword);
+		}
+
+		applyGridData(txtMqttServerPassword).grabExcessHorizontalSpace(true).horizontalAlignment(GridData.FILL);
+	}
+
+	private void createMQTTServerPort(final Composite container) {
+		final Label lbtMQTTServerPort = new Label(container, SWT.NONE);
+		lbtMQTTServerPort.setText("Port");
+
+		txtMqttServerPort = new Text(container, SWT.BORDER);
+		txtMqttServerPort.setMessage("MQTT Server Port");
+
+		if ((mqttServerPort != null) && !"".equals(mqttServerPort)) {
+			txtMqttServerPort.setText(mqttServerPort);
+		}
+
+		applyGridData(txtMqttServerPort).grabExcessHorizontalSpace(true).horizontalAlignment(GridData.FILL);
+	}
+
+	private void createMQTTServerUsername(final Composite container) {
+		final Label lbtMQTTServerUsername = new Label(container, SWT.NONE);
+		lbtMQTTServerUsername.setText("Username");
+
+		txtMqttServerUsername = new Text(container, SWT.BORDER);
+		txtMqttServerUsername.setMessage("MQTT Server Username");
+
+		if ((mqttServerUsername != null) && !"".equals(mqttServerUsername)) {
+			txtMqttServerUsername.setText(mqttServerUsername);
+		}
+
+		applyGridData(txtMqttServerUsername).grabExcessHorizontalSpace(true).horizontalAlignment(GridData.FILL);
+	}
+
+	private void createSomeTestServersDropdown(final Composite container) {
 		final Label lbtTestServers = new Label(container, SWT.NONE);
 		lbtTestServers.setText("Test Broker");
 
-		helpServersCombo = new Combo(container, SWT.READ_ONLY);
-		helpServersCombo.setBounds(50, 50, 150, 65);
-		final String items[] = { "-- Select Test Broker --", eclipseServer,
-				mosquittoServer, mqttDashboardServer, m2mEclipse };
-		helpServersCombo.setItems(items);
-		helpServersCombo.select(0);
-		helpServersCombo.addSelectionListener(new SelectionAdapter() {
+		this.helpServersCombo = new Combo(container, SWT.READ_ONLY);
+		this.helpServersCombo.setBounds(50, 50, 150, 65);
+		final String items[] = { "-- Select Test Broker --", eclipseServer, mosquittoServer, mqttDashboardServer,
+				m2mEclipse };
+		this.helpServersCombo.setItems(items);
+		this.helpServersCombo.select(0);
+		this.helpServersCombo.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent event) {
-				switch (helpServersCombo.getSelectionIndex()) {
+			public void widgetSelected(final SelectionEvent event) {
+				switch (ConnectionSettingsDialog.this.helpServersCombo.getSelectionIndex()) {
 				case 1:
 					txtMqttServerAddress.setText(eclipseServer);
 					break;
@@ -189,132 +270,19 @@ public class ConnectionSettingsDialog extends TitleAreaDialog {
 				default:
 					break;
 				}
-				txtMqttServerPort.setText("1883");
+				txtMqttServerPort.setText(DEFAULT_MQTT_PORT);
 			}
 		});
 
-		applyGridData(helpServersCombo).grabExcessHorizontalSpace(true)
-				.horizontalAlignment(GridData.FILL);
-	}
-
-	private void createMQTTServerAddress(Composite container) {
-		final Label lbtMQTTServerName = new Label(container, SWT.NONE);
-		lbtMQTTServerName.setText("MQTT Server Address*");
-
-		txtMqttServerAddress = new Text(container, SWT.BORDER);
-		txtMqttServerAddress.setMessage("test.example.org");
-
-		if (mqttServerAddress != null && !"".equals(mqttServerAddress))
-			txtMqttServerAddress.setText(mqttServerAddress);
-
-		applyGridData(txtMqttServerAddress).grabExcessHorizontalSpace(true)
-				.horizontalAlignment(GridData.FILL);
-	}
-
-	private void createMQTTServerUsername(Composite container) {
-		final Label lbtMQTTServerUsername = new Label(container, SWT.NONE);
-		lbtMQTTServerUsername.setText("Username");
-
-		txtMqttServerUsername = new Text(container, SWT.BORDER);
-		txtMqttServerUsername.setMessage("MQTT Server Username");
-
-		if (mqttServerUsername != null && !"".equals(mqttServerUsername))
-			txtMqttServerUsername.setText(mqttServerUsername);
-
-		applyGridData(txtMqttServerUsername).grabExcessHorizontalSpace(true)
-				.horizontalAlignment(GridData.FILL);
-	}
-
-	private void createMQTTServerPassword(Composite container) {
-		final Label lbtMQTTServerPassword = new Label(container, SWT.NONE);
-		lbtMQTTServerPassword.setText("Password");
-
-		txtMqttServerPassword = new Text(container, SWT.BORDER);
-		txtMqttServerPassword.setMessage("MQTT Server Password");
-
-		if (mqttServerPassword != null && !"".equals(mqttServerPassword))
-			txtMqttServerPassword.setText(mqttServerPassword);
-
-		applyGridData(txtMqttServerPassword).grabExcessHorizontalSpace(true)
-				.horizontalAlignment(GridData.FILL);
-	}
-
-	private void createMQTTServerPort(Composite container) {
-		final Label lbtMQTTServerPort = new Label(container, SWT.NONE);
-		lbtMQTTServerPort.setText("Port");
-
-		txtMqttServerPort = new Text(container, SWT.BORDER);
-		txtMqttServerPort.setMessage("MQTT Server Port");
-
-		if (mqttServerPort != null && !"".equals(mqttServerPort))
-			txtMqttServerPort.setText(mqttServerPort);
-
-		applyGridData(txtMqttServerPort).grabExcessHorizontalSpace(true)
-				.horizontalAlignment(GridData.FILL);
-	}
-
-	private void createClientId(Composite container) {
-		final Label lbtClientId = new Label(container, SWT.NONE);
-		lbtClientId.setText("Client ID*");
-
-		txtClientId = new Text(container, SWT.BORDER);
-		txtClientId.setText(clientId());
-
-		if (clientId != null && !"".equals(clientId))
-			txtClientId.setText(clientId);
-
-		applyGridData(txtClientId).grabExcessHorizontalSpace(true)
-				.horizontalAlignment(GridData.FILL);
-	}
-
-	@Override
-	protected boolean isResizable() {
-		return true;
-	}
-
-	private void saveInput() {
-		mqttServerAddress = txtMqttServerAddress.getText();
-		clientId = txtClientId.getText();
-		mqttServerPassword = txtMqttServerPassword.getText();
-		mqttServerUsername = txtMqttServerUsername.getText();
-		mqttServerPort = txtMqttServerPort.getText();
-	}
-
-	@Override
-	protected void okPressed() {
-		saveInput();
-		super.okPressed();
-	}
-
-	public String getMqttServerAddress() {
-		return mqttServerAddress;
+		applyGridData(this.helpServersCombo).grabExcessHorizontalSpace(true).horizontalAlignment(GridData.FILL);
 	}
 
 	public String getClientId() {
 		return clientId;
 	}
 
-	public void setMqttServerAddress(String mqttServerAddress) {
-		this.mqttServerAddress = mqttServerAddress;
-	}
-
-	public void setClientId(String clientId) {
-		this.clientId = clientId;
-	}
-
-	/**
-	 * @return the mqttServerUsername
-	 */
-	public String getMqttServerUsername() {
-		return mqttServerUsername;
-	}
-
-	/**
-	 * @param mqttServerUsername
-	 *            the mqttServerUsername to set
-	 */
-	public void setMqttServerUsername(String mqttServerUsername) {
-		ConnectionSettingsDialog.mqttServerUsername = mqttServerUsername;
+	public String getMqttServerAddress() {
+		return mqttServerAddress;
 	}
 
 	/**
@@ -324,20 +292,62 @@ public class ConnectionSettingsDialog extends TitleAreaDialog {
 		return mqttServerPassword;
 	}
 
-	/**
-	 * @param mqttServerPassword
-	 *            the mqttServerPassword to set
-	 */
-	public void setMqttServerPassword(String mqttServerPassword) {
-		ConnectionSettingsDialog.mqttServerPassword = mqttServerPassword;
-	}
-
 	public String getMqttServerPort() {
 		return mqttServerPort;
 	}
 
-	public void setMqttServerPort(String mqttServerPort) {
+	/**
+	 * @return the mqttServerUsername
+	 */
+	public String getMqttServerUsername() {
+		return mqttServerUsername;
+	}
+
+	@Override
+	protected boolean isResizable() {
+		return true;
+	}
+
+	@Override
+	protected void okPressed() {
+		this.saveInput();
+		super.okPressed();
+	}
+
+	private void saveInput() {
+		mqttServerAddress = txtMqttServerAddress.getText();
+		clientId = this.txtClientId.getText();
+		mqttServerPassword = txtMqttServerPassword.getText();
+		mqttServerUsername = txtMqttServerUsername.getText();
+		mqttServerPort = txtMqttServerPort.getText();
+	}
+
+	public void setClientId(final String clientId) {
+		this.clientId = clientId;
+	}
+
+	public void setMqttServerAddress(final String mqttServerAddress) {
+		this.mqttServerAddress = mqttServerAddress;
+	}
+
+	/**
+	 * @param mqttServerPassword
+	 *            the mqttServerPassword to set
+	 */
+	public void setMqttServerPassword(final String mqttServerPassword) {
+		ConnectionSettingsDialog.mqttServerPassword = mqttServerPassword;
+	}
+
+	public void setMqttServerPort(final String mqttServerPort) {
 		ConnectionSettingsDialog.mqttServerPort = mqttServerPort;
+	}
+
+	/**
+	 * @param mqttServerUsername
+	 *            the mqttServerUsername to set
+	 */
+	public void setMqttServerUsername(final String mqttServerUsername) {
+		ConnectionSettingsDialog.mqttServerUsername = mqttServerUsername;
 	}
 
 }

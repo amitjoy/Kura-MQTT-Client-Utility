@@ -15,7 +15,6 @@
  *******************************************************************************/
 package com.amitinside.mqtt.client.kura.log;
 
-import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.List;
 import java.util.Properties;
@@ -24,37 +23,60 @@ import org.osgi.service.event.Event;
 import org.osgi.service.event.EventAdmin;
 
 import com.amitinside.mqtt.client.kura.events.KuraClientEventConstants;
+import com.google.common.collect.Lists;
 
-public class LogTrackerImpl implements LogTracker {
+/**
+ * Implementation of {@link LogTracker}
+ *
+ * @author AMIT KUMAR MONDAL
+ *
+ */
+public final class LogTrackerImpl implements LogTracker {
 
-	private final List<String> logList = new ArrayList<String>();
-
+	/**
+	 * Event Admin Reference
+	 */
 	private volatile EventAdmin eventAdmin;
 
-	protected void bindEventAdmin(EventAdmin eventAdmin) {
-		this.eventAdmin = eventAdmin;
+	/**
+	 * Lists of log to be stored
+	 */
+	private final List<String> logList = Lists.newArrayList();
+
+	/**
+	 * Callback when {@link EventAdmin} is registered
+	 */
+	protected void bindEventAdmin(final EventAdmin eventAdmin) {
+		if (this.eventAdmin == null) {
+			this.eventAdmin = eventAdmin;
+		}
 	}
 
-	protected void unbindEventAdmin(EventAdmin eventAdmin) {
-		if (this.eventAdmin == eventAdmin)
-			this.eventAdmin = null;
+	/** {@inheritDoc}} */
+	@Override
+	public String getLastLog() {
+		return this.logList.get(this.logList.size() - 1);
 	}
 
+	/** {@inheritDoc}} */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public void log(String message) {
+	public void log(final String message) {
 		if (message != null) {
-			if (logList.add(message)) {
+			if (this.logList.add(message)) {
 				final Dictionary properties = new Properties();
-				final Event event = new Event(
-						KuraClientEventConstants.LOG_EVENT_TOPIC, properties);
-				eventAdmin.sendEvent(event);
+				final Event event = new Event(KuraClientEventConstants.LOG_EVENT_TOPIC, properties);
+				this.eventAdmin.sendEvent(event);
 			}
 		}
 	}
 
-	@Override
-	public String getLastLog() {
-		return logList.get(logList.size() - 1);
+	/**
+	 * Callback when {@link EventAdmin} is deregistered
+	 */
+	protected void unbindEventAdmin(final EventAdmin eventAdmin) {
+		if (this.eventAdmin == eventAdmin) {
+			this.eventAdmin = null;
+		}
 	}
 }

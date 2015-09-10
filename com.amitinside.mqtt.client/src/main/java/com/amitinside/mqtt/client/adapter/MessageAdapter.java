@@ -19,15 +19,16 @@ import com.amitinside.mqtt.client.kura.log.LogTracker;
 
 public class MessageAdapter {
 
-	protected static volatile LogTracker logTracker;
+	protected volatile LogTracker logTracker;
 
-	protected void bindLogTracker(LogTracker logTracker) {
+	protected void bindLogTracker(final LogTracker logTracker) {
 		this.logTracker = logTracker;
 	}
 
-	protected void unbindLogTracker(LogTracker logTracker) {
-		if (this.logTracker == logTracker)
+	protected void unbindLogTracker(final LogTracker logTracker) {
+		if (this.logTracker == logTracker) {
 			this.logTracker = null;
+		}
 	}
 
 }

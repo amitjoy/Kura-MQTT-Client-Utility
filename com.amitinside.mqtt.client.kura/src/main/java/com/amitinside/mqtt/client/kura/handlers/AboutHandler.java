@@ -20,9 +20,9 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.amitinside.mqtt.client.kura.dialog.AboutDialog;
 
-public class AboutHandler {
+public final class AboutHandler {
 	@Execute
-	public void execute(Shell shell) {
+	public void execute(final Shell shell) {
 		AboutDialog.openDialogBox(shell);
 	}
 }

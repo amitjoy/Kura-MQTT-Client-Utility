@@ -8,10 +8,6 @@
             name="Eclipse Kura MQTT Client Utility"
             application="org.eclipse.e4.ui.workbench.swt.E4Application">
          <property
-               name="applicationCSS"
-               value="platform:/plugin/com.amitinside.mqtt.client.kura/css/jeeeyul.css">
-         </property>
-         <property
                name="appName"
                value="Eclipse Kura MQTT Client Utility">
          </property>

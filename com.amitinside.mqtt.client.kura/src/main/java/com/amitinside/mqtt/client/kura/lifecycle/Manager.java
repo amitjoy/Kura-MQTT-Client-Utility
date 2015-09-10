@@ -19,15 +19,12 @@ import org.eclipse.e4.ui.workbench.lifecycle.PostContextCreate;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.swt.widgets.Display;
 
-@SuppressWarnings("restriction")
-public class Manager {
+public final class Manager {
 
 	@PostContextCreate
-	public void postContextCreate(IApplicationContext appContext,
-			Display display) {
+	public void postContextCreate(final IApplicationContext appContext, final Display display) {
 
-		for (final String str : (String[]) appContext.getArguments().get(
-				IApplicationContext.APPLICATION_ARGS)) {
+		for (final String str : (String[]) appContext.getArguments().get(IApplicationContext.APPLICATION_ARGS)) {
 			System.out.println(str);
 		}
 

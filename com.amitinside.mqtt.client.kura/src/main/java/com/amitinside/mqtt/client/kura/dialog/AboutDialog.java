@@ -30,13 +30,7 @@ import org.eclipse.swt.widgets.Text;
 
 import com.amitinside.swt.layout.grid.GridDataUtil;
 
-public class AboutDialog extends TitleAreaDialog {
-
-	private Text txtAboutInformation;
-
-	private AboutDialog(final Shell parentShell) {
-		super(parentShell);
-	}
+public final class AboutDialog extends TitleAreaDialog {
 
 	public static void openDialogBox(final Shell parent) {
 		final AboutDialog dialog = new AboutDialog(parent);
@@ -45,34 +39,21 @@ public class AboutDialog extends TitleAreaDialog {
 		}
 	}
 
+	private Text txtAboutInformation;
+
+	private AboutDialog(final Shell parentShell) {
+		super(parentShell);
+	}
+
 	@Override
 	public void create() {
 		super.create();
-		setTitle("About Eclipse Kura MQTT Client Utility");
-		setMessage("Developed By Amit Kumar Mondal (admin@amitinside.com)",
-				IMessageProvider.INFORMATION);
+		this.setTitle("About Eclipse Kura MQTT Client Utility");
+		this.setMessage("Developed By Amit Kumar Mondal (admin@amitinside.com)", IMessageProvider.INFORMATION);
 	}
 
-	@Override
-	protected Control createDialogArea(Composite parent) {
-		final Composite area = (Composite) super.createDialogArea(parent);
-		final Composite container = new Composite(area, SWT.NONE);
-		container.setLayoutData(new GridData(GridData.FILL_BOTH));
-		final GridLayout layout = new GridLayout(2, false);
-		container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		container.setLayout(layout);
-		createAboutInformation(container);
-		return area;
-	}
-
-	@Override
-	protected Point getInitialSize() {
-		return new Point(400, 200);
-	}
-
-	private void createAboutInformation(Composite container) {
-		final Label lbtMQTTServerName = new Label(container, SWT.WRAP
-				| SWT.BORDER | SWT.LEFT);
+	private void createAboutInformation(final Composite container) {
+		final Label lbtMQTTServerName = new Label(container, SWT.WRAP | SWT.BORDER | SWT.LEFT);
 
 		final String information = "This MQTT Client Application facilitates \n "
 				+ "with all the MQTT related operations while using Eclipse \n "
@@ -80,9 +61,24 @@ public class AboutDialog extends TitleAreaDialog {
 
 		lbtMQTTServerName.setText(information);
 
-		GridDataUtil.applyGridData(lbtMQTTServerName)
-				.grabExcessVerticalSpace(true)
-				.horizontalAlignment(GridData.FILL);
+		GridDataUtil.applyGridData(lbtMQTTServerName).grabExcessVerticalSpace(true).horizontalAlignment(GridData.FILL);
+	}
+
+	@Override
+	protected Control createDialogArea(final Composite parent) {
+		final Composite area = (Composite) super.createDialogArea(parent);
+		final Composite container = new Composite(area, SWT.NONE);
+		container.setLayoutData(new GridData(GridData.FILL_BOTH));
+		final GridLayout layout = new GridLayout(2, false);
+		container.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		container.setLayout(layout);
+		this.createAboutInformation(container);
+		return area;
+	}
+
+	@Override
+	protected Point getInitialSize() {
+		return new Point(400, 200);
 	}
 
 	@Override

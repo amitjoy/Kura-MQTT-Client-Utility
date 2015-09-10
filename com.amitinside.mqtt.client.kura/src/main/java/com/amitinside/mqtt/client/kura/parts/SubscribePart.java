@@ -39,6 +39,7 @@ import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -53,32 +54,30 @@ import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
 import com.amitinside.e4.bundleresourceloader.IBundleResourceLoader;
-import com.amitinside.mqtt.client.KuraMQTTClient;
+import com.amitinside.mqtt.client.IKuraMQTTClient;
 import com.amitinside.mqtt.client.adapter.MessageListener;
 import com.amitinside.mqtt.client.kura.message.KuraPayload;
 
 public final class SubscribePart {
 
-	private Label label;
-	private Text textTopic;
-	private Text textResponseMetrics;
-	private Form form;
-	private final KuraMQTTClient mqttClient;
-	private final UISynchronize uiSynchronize;
 	private final IEventBroker broker;
-	private final MWindow window;
 	private final IBundleResourceLoader bundleResourceService;
+	private Form form;
+	private Label label;
+	private IKuraMQTTClient mqttClient;
 	private Button subscribeButton;
+	private Text textResponseMetrics;
+	private Text textTopic;
+	private final UISynchronize uiSynchronize;
+	private final MWindow window;
 
 	@Inject
-	public SubscribePart(MApplication application, IEclipseContext context,
-			UISynchronize uiSynchronize, IEventBroker broker,
-			@Optional IBundleResourceLoader bundleResourceService,
-			MWindow window) {
+	public SubscribePart(final MApplication application, final IEclipseContext context,
+			final UISynchronize uiSynchronize, final IEventBroker broker,
+			@Optional final IBundleResourceLoader bundleResourceService, final MWindow window) {
 		this.uiSynchronize = uiSynchronize;
 		this.broker = broker;
 		this.window = window;
-		this.mqttClient = context.get(KuraMQTTClient.class);
 		this.bundleResourceService = context.get(IBundleResourceLoader.class);
 	}
 
@@ -90,118 +89,121 @@ public final class SubscribePart {
 
 		final FormToolkit toolkit = new FormToolkit(parent.getDisplay());
 
-		form = toolkit.createForm(composite);
-		applyGridData(form).withFill();
+		this.form = toolkit.createForm(composite);
+		applyGridData(this.form).withFill();
 
-		form.setText("Subscribing for KuraPayload");
-		defaultSetImage(form);
+		this.form.setText("Subscribing for KuraPayload");
+		this.defaultSetImage(this.form);
 
-		form.getBody().setLayout(new GridLayout(2, false));
-		label = toolkit.createLabel(form.getBody(), "Topic* ", SWT.NULL);
-		textTopic = toolkit.createText(form.getBody(), "");
-		textTopic.setMessage("TOPIC/NAMESPACE/EXAMPLE");
-		applyGridData(textTopic).withHorizontalFill();
+		this.form.getBody().setLayout(new GridLayout(2, false));
+		this.label = toolkit.createLabel(this.form.getBody(), "Topic* ", SWT.NULL);
+		this.textTopic = toolkit.createText(this.form.getBody(), "");
+		this.textTopic.setMessage("TOPIC/NAMESPACE/EXAMPLE");
+		applyGridData(this.textTopic).withHorizontalFill();
 
-		label = toolkit.createLabel(form.getBody(), "Response Payload ",
-				SWT.NULL);
-		textResponseMetrics = toolkit.createText(form.getBody(), "",
-				SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL);
-		applyGridData(textResponseMetrics).withFill();
+		this.label = toolkit.createLabel(this.form.getBody(), "Response Payload ", SWT.NULL);
+		this.textResponseMetrics = toolkit.createText(this.form.getBody(), "", SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL);
+		applyGridData(this.textResponseMetrics).withFill();
 
-		subscribeButton = toolkit.createButton(form.getBody(), "Subscribe",
-				SWT.PUSH);
-		subscribeButton.addSelectionListener(new SelectionAdapter() {
+		this.subscribeButton = toolkit.createButton(this.form.getBody(), "Subscribe", SWT.PUSH);
+		this.subscribeButton.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if (!mqttClient.isConnected()) {
-					openDialogBox(parent.getShell(), mqttClient, broker,
-							uiSynchronize, window);
+			public void widgetSelected(final SelectionEvent e) {
+				if (SubscribePart.this.mqttClient == null) {
+					MessageDialog.openError(parent.getShell(), "Communication Problem",
+							"Something bad happened to the connection");
 					return;
 				}
 
-				if ((mqttClient.isConnected())
-						&& (textTopic == null || "".equals(textTopic.getText()))) {
-					openError(parent.getShell(), "Error in Subscribing",
-							"Topic can not be left blank");
+				if (!SubscribePart.this.mqttClient.isConnected()) {
+					openDialogBox(parent.getShell(), SubscribePart.this.mqttClient, SubscribePart.this.broker,
+							SubscribePart.this.uiSynchronize, SubscribePart.this.window);
 					return;
 				}
-				if (mqttClient.isConnected())
-					mqttClient.subscribe(textTopic.getText(),
+
+				if ((SubscribePart.this.mqttClient.isConnected()) && ((SubscribePart.this.textTopic == null)
+						|| "".equals(SubscribePart.this.textTopic.getText()))) {
+					openError(parent.getShell(), "Error in Subscribing", "Topic can not be left blank");
+					return;
+				}
+				if (SubscribePart.this.mqttClient.isConnected()) {
+					SubscribePart.this.mqttClient.subscribe(SubscribePart.this.textTopic.getText(),
 							new MessageListener() {
-								@Override
-								public void processMessage(KuraPayload payload) {
-									super.processMessage(payload);
-									updateForm(payload);
-								}
-							});
+						@Override
+						public void processMessage(final KuraPayload payload) {
+							super.processMessage(payload);
+							SubscribePart.this.updateForm(payload);
+						}
+					});
+				}
 			}
 		});
 
-		applyGridData(subscribeButton).horizontalSpan(2).horizontalAlignment(
-				GridData.END);
+		applyGridData(this.subscribeButton).horizontalSpan(2).horizontalAlignment(GridData.END);
 
-		form.getToolBarManager().add(new Action("Connection") {
+		this.form.getToolBarManager().add(new Action("Connection") {
 
 			@Override
 			public void run() {
-				openDialogBox(parent.getShell(), mqttClient, broker,
-						uiSynchronize, window);
+				openDialogBox(parent.getShell(), SubscribePart.this.mqttClient, SubscribePart.this.broker,
+						SubscribePart.this.uiSynchronize, SubscribePart.this.window);
 			}
 		});
 
-		form.getToolBarManager().add(new Action("Unsubscribe") {
+		this.form.getToolBarManager().add(new Action("Unsubscribe") {
 			@Override
 			public void run() {
-				if (!mqttClient.isConnected()) {
-					openDialogBox(parent.getShell(), mqttClient, broker,
-							uiSynchronize, window);
-					return;
+				try {
+					if (!SubscribePart.this.mqttClient.isConnected()) {
+						openDialogBox(parent.getShell(), SubscribePart.this.mqttClient, SubscribePart.this.broker,
+								SubscribePart.this.uiSynchronize, SubscribePart.this.window);
+						return;
+					}
+
+					if ((SubscribePart.this.mqttClient.isConnected())
+							&& ((SubscribePart.this.textTopic.getText() == null)
+									|| "".equals(SubscribePart.this.textTopic.getText()))) {
+						openError(parent.getShell(), "Error while Unsubscribing", "Topic can not be left blank");
+						return;
+					}
+
+					if (SubscribePart.this.mqttClient.isConnected()) {
+						SubscribePart.this.mqttClient.unsubscribe(SubscribePart.this.textTopic.getText());
+					}
+				} catch (final Exception e) {
+					MessageDialog.openError(parent.getShell(), "Communication Problem",
+							"Something bad happened to the connection");
 				}
-
-				if ((mqttClient.isConnected())
-						&& (textTopic.getText() == null || "".equals(textTopic
-								.getText()))) {
-					openError(parent.getShell(), "Error while Unsubscribing",
-							"Topic can not be left blank");
-					return;
-				}
-
-				if (mqttClient.isConnected())
-					mqttClient.unsubscribe(textTopic.getText());
-
 			}
 		});
 
-		form.updateToolBar();
+		this.form.updateToolBar();
 	}
 
-	private void defaultSetImage(Form form) {
-		if (mqttClient.isConnected()) {
-			safelySetToolbarImage(form, uiSynchronize, bundleResourceService,
-					ONLINE_STATUS_IMAGE);
-		} else {
-			safelySetToolbarImage(form, uiSynchronize, bundleResourceService,
-					OFFLINE_STATUS_IMAGE);
+	private void defaultSetImage(final Form form) {
+		if (this.mqttClient != null) {
+			if (this.mqttClient.isConnected()) {
+				safelySetToolbarImage(form, this.uiSynchronize, this.bundleResourceService, ONLINE_STATUS_IMAGE);
+			} else {
+				safelySetToolbarImage(form, this.uiSynchronize, this.bundleResourceService, OFFLINE_STATUS_IMAGE);
+			}
 		}
 	}
 
 	private void updateForm(final KuraPayload payload) {
-		if (textResponseMetrics != null) {
-			uiSynchronize.asyncExec(new Runnable() {
+		if (this.textResponseMetrics != null) {
+			this.uiSynchronize.asyncExec(new Runnable() {
 
 				@Override
 				public void run() {
 					final StringBuilder responseBuilder = new StringBuilder();
 					try {
-						responseBuilder
-								.append(parsePayloadFromProto(payload.metrics()))
-								.append("\n")
-								.append((payload.getBody() != null) ? new String(
-										payload.getBody(), "UTF-8") : "");
+						responseBuilder.append(parsePayloadFromProto(payload.metrics())).append("\n")
+								.append((payload.getBody() != null) ? new String(payload.getBody(), "UTF-8") : "");
 					} catch (final UnsupportedEncodingException e) {
 						e.printStackTrace();
 					}
-					textResponseMetrics.setText(responseBuilder.toString());
+					SubscribePart.this.textResponseMetrics.setText(responseBuilder.toString());
 				}
 			});
 		}
@@ -209,20 +211,16 @@ public final class SubscribePart {
 
 	@Inject
 	@Optional
-	public void updateUIWithClientIdAndConnectionStatus(
-			@UIEventTopic(CONNECTED_EVENT_TOPIC) final Object message) {
-		safelySetToolbarImage(form, uiSynchronize, bundleResourceService,
-				ONLINE_STATUS_IMAGE);
-		setTootipConnectionStatus(uiSynchronize, subscribeButton,
-				((String[]) message)[0], true);
+	public void updateUIWithClientIdAndConnectionStatus(@UIEventTopic(CONNECTED_EVENT_TOPIC) final Object message) {
+		safelySetToolbarImage(this.form, this.uiSynchronize, this.bundleResourceService, ONLINE_STATUS_IMAGE);
+		setTootipConnectionStatus(this.uiSynchronize, this.subscribeButton, ((Object[]) message)[0].toString(), true);
+		this.mqttClient = (IKuraMQTTClient) ((Object[]) message)[2];
 	}
 
 	@Inject
 	@Optional
-	public void updateUIWithConnectionStatus(
-			@UIEventTopic(DISCONNECTED_EVENT_TOPIC) final Object message) {
-		safelySetToolbarImage(form, uiSynchronize, bundleResourceService,
-				OFFLINE_STATUS_IMAGE);
-		setTootipConnectionStatus(uiSynchronize, subscribeButton, null, false);
+	public void updateUIWithConnectionStatus(@UIEventTopic(DISCONNECTED_EVENT_TOPIC) final Object message) {
+		safelySetToolbarImage(this.form, this.uiSynchronize, this.bundleResourceService, OFFLINE_STATUS_IMAGE);
+		setTootipConnectionStatus(this.uiSynchronize, this.subscribeButton, null, false);
 	}
 }

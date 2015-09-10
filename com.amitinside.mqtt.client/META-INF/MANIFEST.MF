@@ -13,9 +13,12 @@ Bundle-ClassPath: lib/hawtbuf-1.10.jar,
 Import-Package: com.amitinside.mqtt.client.kura.events,
  com.amitinside.mqtt.client.kura.log,
  com.amitinside.mqtt.client.kura.message,
- com.amitinside.mqtt.client.kura.message.payload.operator
+ com.amitinside.mqtt.client.kura.message.payload.operator,
+ com.google.common.annotations;version="15.0.0",
+ com.google.common.base;version="15.0.0",
+ org.osgi.framework;version="1.8.0",
+ org.osgi.service.component;version="1.2.2",
+ org.slf4j;version="1.7.2"
 Export-Package: com.amitinside.mqtt.client,
  com.amitinside.mqtt.client.adapter
-Service-Component: OSGI-INF/component.xml,
- OSGI-INF/AdapterComponent.xml
-Bundle-ActivationPolicy: lazy
+Service-Component: OSGI-INF/*.xml

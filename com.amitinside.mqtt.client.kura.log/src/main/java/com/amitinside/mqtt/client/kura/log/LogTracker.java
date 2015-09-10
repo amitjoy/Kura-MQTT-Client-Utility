@@ -15,10 +15,22 @@
  *******************************************************************************/
 package com.amitinside.mqtt.client.kura.log;
 
+/**
+ * Tracks logs
+ *
+ * @author AMIT KUMAR MONDAL
+ *
+ */
 public interface LogTracker {
 
-	public void log(String message);
-
+	/**
+	 * Retrieve the last log
+	 */
 	public String getLastLog();
+
+	/**
+	 * Used to log event
+	 */
+	public void log(String message);
 
 }

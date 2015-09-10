@@ -28,20 +28,27 @@ import com.amitinside.mqtt.client.kura.message.protobuf.KuraPayloadProto;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 
+/**
+ * Decodes Kura EDC Payload encoded using Google Protocol Buffer
+ */
 public class KuraPayloadDecoder {
-	private static final Logger s_logger = LoggerFactory
-			.getLogger(KuraPayloadDecoder.class);
+
+	/**
+	 * Logger
+	 */
+	private static final Logger s_logger = LoggerFactory.getLogger(KuraPayloadDecoder.class);
 
 	private byte[] m_bytes;
 
-	public KuraPayloadDecoder(byte[] bytes) {
-		m_bytes = bytes;
+	/** Constructor */
+	public KuraPayloadDecoder(final byte[] bytes) {
+		this.m_bytes = bytes;
 	}
 
 	public KuraPayload buildFromByteArray() throws IOException {
-		if (GZipUtil.isCompressed(m_bytes)) {
+		if (GZipUtil.isCompressed(this.m_bytes)) {
 			try {
-				m_bytes = GZipUtil.decompress(m_bytes);
+				this.m_bytes = GZipUtil.decompress(this.m_bytes);
 			} catch (final IOException e) {
 				s_logger.info("Decompression failed");
 			}
@@ -49,7 +56,7 @@ public class KuraPayloadDecoder {
 
 		KuraPayloadProto.KuraPayload protoMsg = null;
 		try {
-			protoMsg = KuraPayloadProto.KuraPayload.parseFrom(m_bytes);
+			protoMsg = KuraPayloadProto.KuraPayload.parseFrom(this.m_bytes);
 		} catch (final InvalidProtocolBufferException ipbe) {
 			throw new RuntimeException(ipbe);
 		}
@@ -61,18 +68,17 @@ public class KuraPayloadDecoder {
 		}
 
 		if (protoMsg.hasPosition()) {
-			kuraMsg.setPosition(buildFromProtoBuf(protoMsg.getPosition()));
+			kuraMsg.setPosition(this.buildFromProtoBuf(protoMsg.getPosition()));
 		}
 
 		for (int i = 0; i < protoMsg.getMetricCount(); i++) {
 			final String name = protoMsg.getMetric(i).getName();
 			try {
-				final Object value = getProtoKuraMetricValue(
-						protoMsg.getMetric(i), protoMsg.getMetric(i).getType());
+				final Object value = this.getProtoKuraMetricValue(protoMsg.getMetric(i),
+						protoMsg.getMetric(i).getType());
 				kuraMsg.addMetric(name, value);
 			} catch (final Exception ihte) {
-				s_logger.warn("During deserialization, ignoring metric named: "
-						+ name + ". Unrecognized value type: "
+				s_logger.warn("During deserialization, ignoring metric named: " + name + ". Unrecognized value type: "
 						+ protoMsg.getMetric(i).getType(), ihte);
 			}
 		}
@@ -84,8 +90,7 @@ public class KuraPayloadDecoder {
 		return kuraMsg;
 	}
 
-	private KuraPosition buildFromProtoBuf(
-			KuraPayloadProto.KuraPayload.KuraPosition protoPosition) {
+	private KuraPosition buildFromProtoBuf(final KuraPayloadProto.KuraPayload.KuraPosition protoPosition) {
 		final KuraPosition position = new KuraPosition();
 
 		if (protoPosition.hasLatitude()) {
@@ -118,10 +123,8 @@ public class KuraPayloadDecoder {
 		return position;
 	}
 
-	private Object getProtoKuraMetricValue(
-			KuraPayloadProto.KuraPayload.KuraMetric metric,
-			KuraPayloadProto.KuraPayload.KuraMetric.ValueType type)
-			throws Exception {
+	private Object getProtoKuraMetricValue(final KuraPayloadProto.KuraPayload.KuraMetric metric,
+			final KuraPayloadProto.KuraPayload.KuraMetric.ValueType type) throws Exception {
 		switch (type) {
 
 		case DOUBLE:

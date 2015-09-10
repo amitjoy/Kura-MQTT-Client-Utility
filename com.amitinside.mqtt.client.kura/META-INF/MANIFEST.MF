@@ -41,5 +41,6 @@ Import-Package: com.amitinside.e4.bundleresourceloader,
  org.eclipse.swt.graphics,
  org.eclipse.swt.layout,
  org.eclipse.swt.widgets,
- org.eclipse.ui.forms.widgets,
- org.mihalis.opal.utils
+ org.eclipse.ui.forms.widgets
+Bundle-ClassPath: lib/opal-1.0.1-plugin.jar,
+ .

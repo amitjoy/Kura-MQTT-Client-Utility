@@ -28,25 +28,33 @@ import org.osgi.framework.FrameworkUtil;
 
 import com.amitinside.e4.bundleresourceloader.IBundleResourceLoader;
 
-public class BundleResourceLoaderImpl implements IBundleResourceLoader {
+/**
+ * Implementation of {@link IBundleResourceLoader}
+ *
+ * @author AMIT KUMAR MONDAL
+ *
+ */
+public final class BundleResourceLoaderImpl implements IBundleResourceLoader {
 
+	/** {@inheritDoc}} */
 	@Override
-	public Image loadImage(Class<?> clazz, String path) {
+	public Image loadImage(final Class<?> clazz, final String path) {
 		final Bundle bundle = FrameworkUtil.getBundle(clazz);
 		final URL url = FileLocator.find(bundle, new Path(path), null);
 		final ImageDescriptor imageDescr = ImageDescriptor.createFromURL(url);
 		return imageDescr.createImage();
 	}
 
+	/** {@inheritDoc}} */
 	@Override
-	public <T> T loadResource(Class<?> bundleClazz, Class<T> resourceTypeclazz,
-			String pathToFile) throws IOException {
+	public <T> T loadResource(final Class<?> bundleClazz, final Class<T> resourceTypeclazz, final String pathToFile)
+			throws IOException {
 		final Bundle bundle = FrameworkUtil.getBundle(bundleClazz);
-		final InputStream stream = FileLocator.openStream(bundle, new Path(
-				pathToFile), false);
+		final InputStream stream = FileLocator.openStream(bundle, new Path(pathToFile), false);
 
-		if (resourceTypeclazz.isInstance(InputStream.class))
+		if (resourceTypeclazz.isInstance(InputStream.class)) {
 			return resourceTypeclazz.cast(stream);
+		}
 
 		return null;
 	}

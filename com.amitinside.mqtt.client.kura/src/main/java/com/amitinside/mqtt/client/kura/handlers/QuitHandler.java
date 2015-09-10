@@ -24,12 +24,11 @@ import org.eclipse.swt.widgets.Shell;
 
 import com.amitinside.mqtt.client.KuraMQTTClient;
 
-public class QuitHandler {
+public final class QuitHandler {
 	@Execute
-	public void execute(IWorkbench workbench, Shell shell,
-			MApplication application, IEclipseContext context) {
-		if (MessageDialog.openConfirm(shell, "Confirmation",
-				"Do you want to exit?")) {
+	public void execute(final IWorkbench workbench, final Shell shell, final MApplication application,
+			final IEclipseContext context) {
+		if (MessageDialog.openConfirm(shell, "Confirmation", "Do you want to exit?")) {
 			final KuraMQTTClient client = context.get(KuraMQTTClient.class);
 			client.disconnect();
 			workbench.close();

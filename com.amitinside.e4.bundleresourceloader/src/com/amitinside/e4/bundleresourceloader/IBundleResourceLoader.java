@@ -19,9 +19,14 @@ import java.io.IOException;
 
 import org.eclipse.swt.graphics.Image;
 
+/**
+ * Interface to load resources from specified bundle resource path
+ *
+ * @author AMIT KUMAR MONDAL
+ *
+ */
 public interface IBundleResourceLoader {
 	public Image loadImage(Class<?> clazz, String path);
 
-	public <T> T loadResource(Class<?> bundleClazz, Class<T> resourceTypeclazz,
-			String pathToFile) throws IOException;
+	public <T> T loadResource(Class<?> bundleClazz, Class<T> resourceTypeclazz, String pathToFile) throws IOException;
 }
