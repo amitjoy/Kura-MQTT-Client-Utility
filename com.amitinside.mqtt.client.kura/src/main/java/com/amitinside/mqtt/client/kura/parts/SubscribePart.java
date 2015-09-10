@@ -213,7 +213,6 @@ public final class SubscribePart {
 	@Inject
 	@Optional
 	public void updateUIWithClientIdAndConnectionStatus(@UIEventTopic(CONNECTED_EVENT_TOPIC) final Object message) {
-		System.out.println("In Subscribe Part");
 		safelySetToolbarImage(this.form, this.uiSynchronize, this.bundleResourceService, ONLINE_STATUS_IMAGE);
 		setTootipConnectionStatus(this.uiSynchronize, this.subscribeButton, ((Object[]) message)[0].toString(), true);
 		mqttClient = (IKuraMQTTClient) ((Object[]) message)[2];
