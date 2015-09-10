@@ -92,8 +92,15 @@ public final class ConnectionSettingsDialog extends TitleAreaDialog {
 			}
 
 			if (mqttClient == null) {
-				ConnectionSettingsDialog.mqttClient = new KuraMQTTClient.Builder().setHost(mqttServerAddress)
-						.setPort(mqttServerPort).setClientId(clientId).build();
+				if (!("".equals(mqttServerUsername) || "".equals(mqttServerPassword))) {
+					ConnectionSettingsDialog.mqttClient = new KuraMQTTClient.Builder().setHost(mqttServerAddress)
+							.setPort(mqttServerPort).setClientId(clientId).setUsername(mqttServerUsername)
+							.setPassword(mqttServerPassword).build();
+				} else {
+					ConnectionSettingsDialog.mqttClient = new KuraMQTTClient.Builder().setHost(mqttServerAddress)
+							.setPort(mqttServerPort).setClientId(clientId).build();
+				}
+
 			}
 
 			synchronize.asyncExec(new Runnable() {
@@ -109,7 +116,6 @@ public final class ConnectionSettingsDialog extends TitleAreaDialog {
 					}
 
 					if (status) {
-						System.out.println("Status:::" + status);
 						broker.post(CONNECTED_EVENT_TOPIC,
 								new Object[] { mqttServerAddress, clientId, ConnectionSettingsDialog.mqttClient });
 					} else {
