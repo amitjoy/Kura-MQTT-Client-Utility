@@ -22,3 +22,4 @@ Import-Package: com.amitinside.mqtt.client.kura.events,
 Export-Package: com.amitinside.mqtt.client,
  com.amitinside.mqtt.client.adapter
 Service-Component: OSGI-INF/*.xml
+Require-Bundle: com.amitinside.mqtt.client.kura.payload

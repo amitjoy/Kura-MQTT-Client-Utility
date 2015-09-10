@@ -46,10 +46,8 @@ public final class LogTrackerImpl implements LogTracker {
 	/**
 	 * Callback when {@link EventAdmin} is registered
 	 */
-	protected void bindEventAdmin(final EventAdmin eventAdmin) {
-		if (this.eventAdmin == null) {
-			this.eventAdmin = eventAdmin;
-		}
+	protected synchronized void bindEventAdmin(final EventAdmin eventAdmin) {
+		this.eventAdmin = eventAdmin;
 	}
 
 	/** {@inheritDoc}} */
@@ -74,7 +72,7 @@ public final class LogTrackerImpl implements LogTracker {
 	/**
 	 * Callback when {@link EventAdmin} is deregistered
 	 */
-	protected void unbindEventAdmin(final EventAdmin eventAdmin) {
+	protected synchronized void unbindEventAdmin(final EventAdmin eventAdmin) {
 		if (this.eventAdmin == eventAdmin) {
 			this.eventAdmin = null;
 		}

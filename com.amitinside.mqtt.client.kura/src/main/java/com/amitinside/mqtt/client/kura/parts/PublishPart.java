@@ -63,13 +63,13 @@ import com.amitinside.mqtt.client.kura.message.KuraPayload;
 
 public final class PublishPart {
 
+	private static IKuraMQTTClient mqttClient;
 	private final IEventBroker broker;
 	private final IBundleResourceLoader bundleResourceService;
 	private Button buttonPublish;
 	private Form form;
 	private Label label;
 	private final EMenuService menuService;
-	private IKuraMQTTClient mqttClient;
 	private Text textPublishMetric;
 	private Text textRequesterClientId;
 	private Text textRequestId;
@@ -132,14 +132,14 @@ public final class PublishPart {
 		this.buttonPublish.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				if (PublishPart.this.mqttClient == null) {
+				if (mqttClient == null) {
 					MessageDialog.openError(parent.getShell(), "Communication Problem",
 							"Something bad happened to the connection");
 					return;
 				}
 
-				if (!PublishPart.this.mqttClient.isConnected()) {
-					openDialogBox(parent.getShell(), PublishPart.this.mqttClient, PublishPart.this.broker,
+				if (!mqttClient.isConnected()) {
+					openDialogBox(parent.getShell(), mqttClient, PublishPart.this.broker,
 							PublishPart.this.uiSynchronize, PublishPart.this.window);
 					return;
 				}
@@ -173,7 +173,7 @@ public final class PublishPart {
 						e1.printStackTrace();
 					}
 				}
-				PublishPart.this.mqttClient.publish(PublishPart.this.textTopic.getText(), payload);
+				mqttClient.publish(PublishPart.this.textTopic.getText(), payload);
 				PublishPart.this.createSubscriptionHint(parent);
 			}
 		});
@@ -184,8 +184,8 @@ public final class PublishPart {
 		this.form.getToolBarManager().add(new Action("Connection") {
 			@Override
 			public void run() {
-				openDialogBox(parent.getShell(), PublishPart.this.mqttClient, PublishPart.this.broker,
-						PublishPart.this.uiSynchronize, PublishPart.this.window);
+				openDialogBox(parent.getShell(), mqttClient, PublishPart.this.broker, PublishPart.this.uiSynchronize,
+						PublishPart.this.window);
 			}
 		});
 
@@ -205,8 +205,8 @@ public final class PublishPart {
 	}
 
 	private void defaultSetImage(final Form form) {
-		if (this.mqttClient != null) {
-			if (this.mqttClient.isConnected()) {
+		if (mqttClient != null) {
+			if (mqttClient.isConnected()) {
 				safelySetToolbarImage(form, this.uiSynchronize, this.bundleResourceService, ONLINE_STATUS_IMAGE);
 			} else {
 				safelySetToolbarImage(form, this.uiSynchronize, this.bundleResourceService, OFFLINE_STATUS_IMAGE);
@@ -222,6 +222,7 @@ public final class PublishPart {
 	@Inject
 	@Optional
 	public void updateUIWithClientIdAndConnectionStatus(@UIEventTopic(CONNECTED_EVENT_TOPIC) final Object message) {
+		System.out.println("In Publish Part");
 		if (message instanceof Object[]) {
 			this.uiSynchronize.asyncExec(new Runnable() {
 				@Override
@@ -232,7 +233,7 @@ public final class PublishPart {
 							PublishPart.this.bundleResourceService.loadImage(this.getClass(), ONLINE_STATUS_IMAGE));
 					setTootipConnectionStatus(PublishPart.this.uiSynchronize, PublishPart.this.buttonPublish,
 							((Object[]) message)[0].toString(), true);
-					PublishPart.this.mqttClient = (IKuraMQTTClient) ((Object[]) message)[2];
+					mqttClient = (IKuraMQTTClient) ((Object[]) message)[2];
 				}
 			});
 		}

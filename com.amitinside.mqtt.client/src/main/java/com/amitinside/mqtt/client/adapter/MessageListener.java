@@ -17,10 +17,17 @@ package com.amitinside.mqtt.client.adapter;
 
 import com.amitinside.mqtt.client.kura.message.KuraPayload;
 
-public abstract class MessageListener extends MessageAdapter {
+/**
+ * Used to listen to MQTT Messages
+ *
+ * @author AMIT KUMAR MONDAL
+ *
+ */
+public interface MessageListener {
 
-	public void processMessage(final KuraPayload payload) {
-		logTracker.log("Subscription Message Received");
-	}
+	/**
+	 * Callback after client receives a message
+	 */
+	public void processMessage(final KuraPayload payload);
 
 }
