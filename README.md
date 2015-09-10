@@ -23,27 +23,11 @@ The main motive of developing this application is to use Eclipse Kura's CRUD lik
 
 ### **How do I get set up?** ###
 
-* Download Eclipse for RCP and RAP Developers from **https://eclipse.org/downloads/packages/eclipse-rcp-and-rap-developers/lunasr2**
+* Download Eclipse for RCP and RAP Developers from **http://www.eclipse.org/downloads/packages/eclipse-rcp-and-rap-developers/marsr**
 * Extract the compressed file and run Eclipse
-* Go to **Help Menu** and Select **Install New Software**
-* In the Dialog box, paste **http://download.eclipse.org/e4/downloads/drops/S-0.17-201501051100/repository/** in Work With Section
-* Press Enter
-* You will be prompted with a list
-* Choose **Eclipse 4 - Core Tools** and **Eclipse 4 - CSS Spy**
-* Click on **Next**
-* Wait sometime until you see a dialog pox prompting you to install
-* Press **OK**
-* Wait for few more minutes and you will be asked to restart your Eclipse IDE
-* Restart the IDE
-* After the restart, go to **Help** -> **Eclipse Marketplace**
-* Search for **jeeeyul**
-* Install **Jeeeyul Eclipse Themes 2.2**
-* Accept the certificate from the popped up dialog box
-* You will again be prompted to restart your IDE
-* Go ahead and restart it
-* Now download a plugin from this: **https://drive.google.com/file/d/0BxckedW58_H5dUZKY0J2b3pwRWc/edit?pli=1**
+* Download Slf4j Implementation Bundle (slf4j-log4j)
 * Put it in your **plugins** folder which you will find in your Eclipse folder
-* Again you have to restart your IDE
+* You have to restart your IDE
 * Download all the projects and import all of them into your workspace
 * Double click on **com.amitinside.mqtt.client.kura.product** placed under **com.amitinside.mqtt.client.kura.product** project
 * Then click on **Launch an Eclipse Application**
