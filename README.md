@@ -38,7 +38,7 @@ The main motive of developing this application is to use Eclipse Kura's CRUD lik
 * Double click on **com.amitinside.mqtt.client.kura.product** placed under **com.amitinside.mqtt.client.kura.product** project
 * Then click on **Launch an Eclipse Application**
 * If you see the application has views with no controls, then you have to go to **Run Configurations**
-* Select **com.amitinside.mqtt.client.kura.product** and go to Plugins folder
+* Select **com.amitinside.mqtt.client.kura.product** and go to Plugins tab
 * Click on **Add Required Plugins** and then Apply.
 * Now you are good to go.
 
