@@ -17,7 +17,7 @@
 
    <splash
       location="com.amitinside.mqtt.client.kura" />
-   <launcher name="Eclipse Kura MQTT Client Utility">
+   <launcher name="KuraMQTTClientUtility">
       <macosx icon="/com.amitinside.mqtt.client.kura/images/KuraMQTTClientUtil.icns"/>
       <solaris/>
       <win useIco="false">

@@ -42,8 +42,6 @@ import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
 import org.eclipse.e4.ui.services.EMenuService;
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -102,7 +100,7 @@ public final class PublishPart {
 		this.form = toolkit.createForm(composite);
 		applyGridData(this.form).withFill();
 
-		this.form.setText("Publishing with KuraPayload");
+		this.form.setText("Publishing with EDC Payload");
 		this.defaultSetImage(this.form);
 
 		this.form.getBody().setLayout(new GridLayout(2, false));
@@ -133,8 +131,7 @@ public final class PublishPart {
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
 				if (mqttClient == null) {
-					MessageDialog.openError(parent.getShell(), "Communication Problem",
-							"Something bad happened to the connection");
+					openError(parent.getShell(), "Communication Problem", "Something bad happened to the connection");
 					return;
 				}
 
@@ -181,15 +178,7 @@ public final class PublishPart {
 
 		applyGridData(this.buttonPublish).horizontalSpan(2).horizontalAlignment(GridData.END);
 
-		this.form.getToolBarManager().add(new Action("Connection") {
-			@Override
-			public void run() {
-				openDialogBox(parent.getShell(), mqttClient, PublishPart.this.broker, PublishPart.this.uiSynchronize,
-						PublishPart.this.window);
-			}
-		});
-
-		this.form.updateToolBar();
+		safelySetToolbarImage(this.form, this.uiSynchronize, this.bundleResourceService, OFFLINE_STATUS_IMAGE);
 
 	}
 

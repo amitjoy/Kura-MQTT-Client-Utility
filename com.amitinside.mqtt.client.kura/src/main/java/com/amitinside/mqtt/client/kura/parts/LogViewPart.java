@@ -16,6 +16,8 @@
 package com.amitinside.mqtt.client.kura.parts;
 
 import static com.amitinside.mqtt.client.kura.events.KuraClientEventConstants.LOG_EVENT_TOPIC;
+import static com.amitinside.mqtt.client.kura.util.FormUtil.LOG_IMAGE;
+import static com.amitinside.mqtt.client.kura.util.FormUtil.safelySetToolbarImage;
 import static com.amitinside.swt.layout.grid.GridDataUtil.applyGridData;
 
 import javax.annotation.PostConstruct;
@@ -35,19 +37,23 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.Form;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
+import com.amitinside.e4.bundleresourceloader.IBundleResourceLoader;
 import com.amitinside.mqtt.client.kura.log.LogTracker;
 
 public final class LogViewPart {
 
+	private final IBundleResourceLoader bundleResourceLoader;
+	private Form form;
+	private final LogTracker logTracker;
 	private final UISynchronize synchronize;
 	private Text textLog;
-	private final LogTracker logTracker;
 
 	@Inject
-	public LogViewPart(EPartService partService, IEclipseContext context,
-			UISynchronize synchronize) {
+	public LogViewPart(final EPartService partService, final IEclipseContext context, final UISynchronize synchronize,
+			@Optional final IBundleResourceLoader bundleResourceService) {
 		this.synchronize = synchronize;
-		logTracker = context.get(LogTracker.class);
+		this.logTracker = context.get(LogTracker.class);
+		this.bundleResourceLoader = bundleResourceService;
 	}
 
 	@PostConstruct
@@ -58,35 +64,36 @@ public final class LogViewPart {
 
 		final FormToolkit toolkit = new FormToolkit(parent.getDisplay());
 
-		final Form form = toolkit.createForm(composite);
-		applyGridData(form).withFill();
+		this.form = toolkit.createForm(composite);
+		applyGridData(this.form).withFill();
 
-		form.setText("MQTT Client Logs");
+		this.form.setText("MQTT Client Logs");
 
-		form.getBody().setLayout(new GridLayout(1, false));
+		this.form.getBody().setLayout(new GridLayout(1, false));
 
-		textLog = toolkit.createText(form.getBody(), "", SWT.READ_ONLY
-				| SWT.V_SCROLL | SWT.WRAP);
-		applyGridData(textLog).withFill();
+		this.textLog = toolkit.createText(this.form.getBody(), "", SWT.READ_ONLY | SWT.V_SCROLL | SWT.WRAP);
+		applyGridData(this.textLog).withFill();
 
-		form.getToolBarManager().add(new Action("Clear") {
+		this.form.getToolBarManager().add(new Action("Clear") {
 			@Override
 			public void run() {
-				textLog.setText("");
+				LogViewPart.this.textLog.setText("");
 			}
 		});
 
-		form.updateToolBar();
+		this.form.updateToolBar();
+		safelySetToolbarImage(this.form, this.synchronize, this.bundleResourceLoader, LOG_IMAGE);
 	}
 
 	@Inject
 	@Optional
-	public void updateForm(@UIEventTopic(LOG_EVENT_TOPIC) Object obj) {
-		synchronize.asyncExec(new Runnable() {
+	public void updateForm(@UIEventTopic(LOG_EVENT_TOPIC) final Object obj) {
+		this.synchronize.asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				if (textLog != null)
-					textLog.append("\n " + logTracker.getLastLog());
+				if (LogViewPart.this.textLog != null) {
+					LogViewPart.this.textLog.append("\n " + LogViewPart.this.logTracker.getLastLog());
+				}
 			}
 		});
 	}
