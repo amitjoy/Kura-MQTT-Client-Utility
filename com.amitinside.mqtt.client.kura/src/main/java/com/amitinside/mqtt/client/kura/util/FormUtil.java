@@ -25,33 +25,36 @@ import com.amitinside.e4.bundleresourceloader.IBundleResourceLoader;
 
 public final class FormUtil {
 
-	public static final String ONLINE_STATUS_IMAGE = "icons/online.png";
+	public static final String LOG_IMAGE = "icons/log2.png";
 	public static final String OFFLINE_STATUS_IMAGE = "icons/offline.png";
+	public static final String ONLINE_STATUS_IMAGE = "icons/online.png";
+	public static final String SETTINGS_IMAGE = "icons/settings.png";
+	public static final String UNSUBSCRIBE_IMAGE = "icons/unsubscribe.png";
 
-	public static void safelySetToolbarImage(final Form form,
-			UISynchronize uiSynchronize,
+	public static void safelySetToolbarImage(final Form form, final UISynchronize uiSynchronize,
 			final IBundleResourceLoader bundleResourceService, final String path) {
 		uiSynchronize.asyncExec(new Runnable() {
 			@Override
 			public void run() {
-				form.setImage(bundleResourceService.loadImage(getClass(), path));
+				form.setImage(bundleResourceService.loadImage(this.getClass(), path));
 			}
 		});
 
 	}
 
-	public static void setTootipConnectionStatus(UISynchronize uiSynchronize,
-			Control control, final String host, final boolean connected) {
+	public static void setTootipConnectionStatus(final UISynchronize uiSynchronize, final Control control,
+			final String host, final boolean connected) {
 		final DefaultToolTip toolTip = new DefaultToolTip(control);
 		toolTip.setShift(new Point(5, 5));
 		uiSynchronize.asyncExec(new Runnable() {
 
 			@Override
 			public void run() {
-				if (connected)
+				if (connected) {
 					toolTip.setText("Connected to " + host);
-				else
+				} else {
 					toolTip.setText("Disconnected");
+				}
 			}
 		});
 	}

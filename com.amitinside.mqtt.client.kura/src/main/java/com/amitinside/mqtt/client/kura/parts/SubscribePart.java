@@ -20,6 +20,8 @@ import static com.amitinside.mqtt.client.kura.events.KuraClientEventConstants.CO
 import static com.amitinside.mqtt.client.kura.events.KuraClientEventConstants.DISCONNECTED_EVENT_TOPIC;
 import static com.amitinside.mqtt.client.kura.util.FormUtil.OFFLINE_STATUS_IMAGE;
 import static com.amitinside.mqtt.client.kura.util.FormUtil.ONLINE_STATUS_IMAGE;
+import static com.amitinside.mqtt.client.kura.util.FormUtil.SETTINGS_IMAGE;
+import static com.amitinside.mqtt.client.kura.util.FormUtil.UNSUBSCRIBE_IMAGE;
 import static com.amitinside.mqtt.client.kura.util.FormUtil.safelySetToolbarImage;
 import static com.amitinside.mqtt.client.kura.util.FormUtil.setTootipConnectionStatus;
 import static com.amitinside.mqtt.client.kura.util.PayloadUtil.parsePayloadFromProto;
@@ -38,8 +40,10 @@ import org.eclipse.e4.ui.di.UIEventTopic;
 import org.eclipse.e4.ui.di.UISynchronize;
 import org.eclipse.e4.ui.model.application.MApplication;
 import org.eclipse.e4.ui.model.application.ui.basic.MWindow;
+import org.eclipse.e4.ui.workbench.modeling.EPartService;
+import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -61,12 +65,14 @@ import com.amitinside.mqtt.client.kura.message.KuraPayload;
 
 public final class SubscribePart {
 
+	private static final String ID = "com.amitinside.mqtt.client.kura.part.subscribe";
 	private static LogTracker logTracker;
 	private static IKuraMQTTClient mqttClient;
 	private final IEventBroker broker;
 	private final IBundleResourceLoader bundleResourceService;
 	private Form form;
 	private Label label;
+	private final EPartService partService;
 	private Button subscribeButton;
 	private Text textResponseMetrics;
 	private Text textTopic;
@@ -76,12 +82,14 @@ public final class SubscribePart {
 	@Inject
 	public SubscribePart(final MApplication application, final IEclipseContext context,
 			final UISynchronize uiSynchronize, final IEventBroker broker,
-			@Optional final IBundleResourceLoader bundleResourceService, final MWindow window) {
+			@Optional final IBundleResourceLoader bundleResourceService, final MWindow window,
+			final EPartService partService) {
 		this.uiSynchronize = uiSynchronize;
 		this.broker = broker;
 		this.window = window;
 		this.bundleResourceService = context.get(IBundleResourceLoader.class);
 		logTracker = context.get(LogTracker.class);
+		this.partService = partService;
 	}
 
 	@PostConstruct
@@ -95,7 +103,7 @@ public final class SubscribePart {
 		this.form = toolkit.createForm(composite);
 		applyGridData(this.form).withFill();
 
-		this.form.setText("Subscribing for KuraPayload");
+		this.form.setText("Subscribing for EDC Payload");
 		this.defaultSetImage(this.form);
 
 		this.form.getBody().setLayout(new GridLayout(2, false));
@@ -112,9 +120,8 @@ public final class SubscribePart {
 		this.subscribeButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(final SelectionEvent e) {
-				if (SubscribePart.this.mqttClient == null) {
-					MessageDialog.openError(parent.getShell(), "Communication Problem",
-							"Something bad happened to the connection");
+				if (mqttClient == null) {
+					openError(parent.getShell(), "Communication Problem", "Something bad happened to the connection");
 					return;
 				}
 
@@ -126,7 +133,7 @@ public final class SubscribePart {
 
 				if ((mqttClient.isConnected()) && ((SubscribePart.this.textTopic == null)
 						|| "".equals(SubscribePart.this.textTopic.getText()))) {
-					openError(parent.getShell(), "Error in Subscribing", "Topic can not be left blank");
+					openError(parent.getShell(), "Error while Subscribing", "Topic can not be left blank");
 					return;
 				}
 				if (mqttClient.isConnected()) {
@@ -135,6 +142,13 @@ public final class SubscribePart {
 						public void processMessage(final KuraPayload payload) {
 							logTracker.log("Message Received");
 							SubscribePart.this.updateForm(payload);
+							SubscribePart.this.uiSynchronize.asyncExec(new Runnable() {
+
+								@Override
+								public void run() {
+									SubscribePart.this.partService.showPart(ID, PartState.VISIBLE);
+								}
+							});
 						}
 					});
 				}
@@ -146,6 +160,12 @@ public final class SubscribePart {
 		this.form.getToolBarManager().add(new Action("Connection") {
 
 			@Override
+			public ImageDescriptor getImageDescriptor() {
+				return ImageDescriptor.createFromImage(
+						SubscribePart.this.bundleResourceService.loadImage(this.getClass(), SETTINGS_IMAGE));
+			}
+
+			@Override
 			public void run() {
 				openDialogBox(parent.getShell(), mqttClient, SubscribePart.this.broker,
 						SubscribePart.this.uiSynchronize, SubscribePart.this.window);
@@ -153,6 +173,12 @@ public final class SubscribePart {
 		});
 
 		this.form.getToolBarManager().add(new Action("Unsubscribe") {
+			@Override
+			public ImageDescriptor getImageDescriptor() {
+				return ImageDescriptor.createFromImage(
+						SubscribePart.this.bundleResourceService.loadImage(this.getClass(), UNSUBSCRIBE_IMAGE));
+			}
+
 			@Override
 			public void run() {
 				try {
@@ -172,13 +198,13 @@ public final class SubscribePart {
 						mqttClient.unsubscribe(SubscribePart.this.textTopic.getText());
 					}
 				} catch (final Exception e) {
-					MessageDialog.openError(parent.getShell(), "Communication Problem",
-							"Something bad happened to the connection");
+					openError(parent.getShell(), "Communication Problem", "Something bad happened to the connection");
 				}
 			}
 		});
 
 		this.form.updateToolBar();
+		safelySetToolbarImage(this.form, this.uiSynchronize, this.bundleResourceService, OFFLINE_STATUS_IMAGE);
 	}
 
 	private void defaultSetImage(final Form form) {

@@ -329,11 +329,11 @@ public final class ConnectionSettingsDialog extends TitleAreaDialog {
 	}
 
 	public void setClientId(final String clientId) {
-		this.clientId = clientId;
+		ConnectionSettingsDialog.clientId = clientId;
 	}
 
 	public void setMqttServerAddress(final String mqttServerAddress) {
-		this.mqttServerAddress = mqttServerAddress;
+		ConnectionSettingsDialog.mqttServerAddress = mqttServerAddress;
 	}
 
 	/**
