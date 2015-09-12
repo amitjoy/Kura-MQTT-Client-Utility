@@ -25,7 +25,7 @@ The main motive of developing this application is to use Eclipse Kura's EDC Comm
 ### **What is this repository for?** ###
 
 * E4 Application source for Kura MQTT Client Utility
-* 1.1.0
+* 1.2.0
 
 ### **How do I get set up?** ###
 
