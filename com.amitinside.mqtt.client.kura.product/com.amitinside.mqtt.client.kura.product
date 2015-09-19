@@ -18,7 +18,6 @@
    <splash
       location="com.amitinside.mqtt.client.kura" />
    <launcher name="KuraMQTTClientUtility">
-      <macosx icon="/com.amitinside.mqtt.client.kura/images/KuraMQTTClientUtil.icns"/>
       <solaris/>
       <win useIco="false">
          <bmp/>
@@ -30,9 +29,6 @@
    </vm>
 
    <plugins>
-      <plugin id="ch.qos.logback.classic"/>
-      <plugin id="ch.qos.logback.core"/>
-      <plugin id="ch.qos.logback.slf4j" fragment="true"/>
       <plugin id="com.amitinside.e4.bundleresourceloader"/>
       <plugin id="com.amitinside.mqtt.client"/>
       <plugin id="com.amitinside.mqtt.client.kura"/>
@@ -47,9 +43,6 @@
       <plugin id="javax.inject"/>
       <plugin id="javax.servlet"/>
       <plugin id="javax.xml"/>
-      <plugin id="net.jeeeyul.eclipse.themes"/>
-      <plugin id="net.jeeeyul.eclipse.themes.ui"/>
-      <plugin id="net.jeeeyul.swtend"/>
       <plugin id="org.apache.batik.css"/>
       <plugin id="org.apache.batik.util"/>
       <plugin id="org.apache.batik.util.gui"/>
@@ -122,28 +115,15 @@
       <plugin id="org.eclipse.equinox.p2.metadata.repository"/>
       <plugin id="org.eclipse.equinox.p2.repository"/>
       <plugin id="org.eclipse.equinox.preferences"/>
-      <plugin id="org.eclipse.equinox.region" fragment="true"/>
       <plugin id="org.eclipse.equinox.registry"/>
       <plugin id="org.eclipse.equinox.security"/>
       <plugin id="org.eclipse.equinox.security.macosx" fragment="true"/>
-      <plugin id="org.eclipse.equinox.transforms.hook" fragment="true"/>
       <plugin id="org.eclipse.equinox.util"/>
-      <plugin id="org.eclipse.equinox.weaving.hook" fragment="true"/>
       <plugin id="org.eclipse.help"/>
-      <plugin id="org.eclipse.jem.util"/>
       <plugin id="org.eclipse.jface"/>
       <plugin id="org.eclipse.jface.databinding"/>
       <plugin id="org.eclipse.jface.text"/>
       <plugin id="org.eclipse.ltk.core.refactoring"/>
-      <plugin id="org.eclipse.m2e.archetype.common"/>
-      <plugin id="org.eclipse.m2e.core"/>
-      <plugin id="org.eclipse.m2e.core.ui"/>
-      <plugin id="org.eclipse.m2e.logback.appender" fragment="true"/>
-      <plugin id="org.eclipse.m2e.maven.indexer"/>
-      <plugin id="org.eclipse.m2e.maven.runtime"/>
-      <plugin id="org.eclipse.m2e.maven.runtime.slf4j.simple"/>
-      <plugin id="org.eclipse.m2e.model.edit"/>
-      <plugin id="org.eclipse.m2e.workspace.cli"/>
       <plugin id="org.eclipse.osgi"/>
       <plugin id="org.eclipse.osgi.compatibility.state" fragment="true"/>
       <plugin id="org.eclipse.osgi.services"/>
@@ -160,16 +140,6 @@
       <plugin id="org.eclipse.ui.views"/>
       <plugin id="org.eclipse.ui.workbench"/>
       <plugin id="org.eclipse.ui.workbench.texteditor"/>
-      <plugin id="org.eclipse.wst.common.core"/>
-      <plugin id="org.eclipse.wst.common.emf"/>
-      <plugin id="org.eclipse.wst.common.environment"/>
-      <plugin id="org.eclipse.wst.common.frameworks"/>
-      <plugin id="org.eclipse.wst.common.project.facet.core"/>
-      <plugin id="org.eclipse.wst.common.uriresolver"/>
-      <plugin id="org.eclipse.wst.sse.core"/>
-      <plugin id="org.eclipse.wst.validation"/>
-      <plugin id="org.eclipse.wst.xml.core"/>
-      <plugin id="org.eclipse.wst.xsd.core"/>
       <plugin id="org.eclipse.xsd"/>
       <plugin id="org.slf4j.api"/>
       <plugin id="org.slf4j.impl.log4j12" fragment="true"/>
@@ -178,8 +148,6 @@
       <plugin id="org.w3c.dom.events"/>
       <plugin id="org.w3c.dom.smil"/>
       <plugin id="org.w3c.dom.svg"/>
-      <plugin id="slf4j.api"/>
-      <plugin id="slf4j.log4j12" fragment="true"/>
    </plugins>
 
    <features>
