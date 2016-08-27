@@ -32,10 +32,7 @@ The main motive of developing this application is to use Eclipse Kura's EDC Comm
 * Download Eclipse Neon for **RCP and RAP** Developers from **http://www.eclipse.org/downloads**
 * Download all the projects and import all of them into your workspace
 * Double click on **com.amitinside.mqtt.client.kura.product** placed under **com.amitinside.mqtt.client.kura.product** project
-* Then click on **Launch an Eclipse Application**<!---
-* If you see the application has views with no controls, then you have to go to **Run Configurations**
-* Select **com.amitinside.mqtt.client.kura.product** and go to Plugins tab
-* Click on **Add Required Plugins** and then Apply.-->
+* Then click on **Launch an Eclipse Application**
 * Now you are good to go.
 
 ### **Who do I talk to?** ###
