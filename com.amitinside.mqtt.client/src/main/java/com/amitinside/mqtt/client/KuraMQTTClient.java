@@ -35,8 +35,6 @@ import org.fusesource.mqtt.client.MQTT;
 import org.fusesource.mqtt.client.QoS;
 import org.fusesource.mqtt.client.Topic;
 import org.osgi.service.component.ComponentContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.amitinside.mqtt.client.adapter.MessageListener;
 import com.amitinside.mqtt.client.kura.log.LogTracker;
@@ -99,7 +97,6 @@ public final class KuraMQTTClient implements IKuraMQTTClient {
 	/**
 	 * Logger
 	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(KuraMQTTClient.class);
 	private static volatile LogTracker logTracker;
 	protected Map<String, MessageListener> channels = null;
 	private String clientId;
@@ -145,7 +142,7 @@ public final class KuraMQTTClient implements IKuraMQTTClient {
 	}
 
 	protected synchronized void activate(final ComponentContext context) {
-		LOGGER.debug("Activating Service Component");
+		System.out.println("Activating Service Component");
 	}
 
 	protected synchronized void bindLogTracker(final LogTracker logTracker) {
@@ -171,7 +168,7 @@ public final class KuraMQTTClient implements IKuraMQTTClient {
 
 		} catch (final URISyntaxException e) {
 			logTracker.log("Invalid Host URL");
-			LOGGER.error(Throwables.getStackTraceAsString(e));
+			System.err.println(Throwables.getStackTraceAsString(e));
 		}
 		try {
 			if (this.connectionLock.tryLock(5, TimeUnit.SECONDS)) {
@@ -189,7 +186,7 @@ public final class KuraMQTTClient implements IKuraMQTTClient {
 	}
 
 	protected synchronized void deactivate(final ComponentContext context) {
-		LOGGER.debug("Dectivating Service Component");
+		System.out.println("Dectivating Service Component");
 	}
 
 	/** {@inheritDoc} */
@@ -200,7 +197,7 @@ public final class KuraMQTTClient implements IKuraMQTTClient {
 				this.safelyDisconnect();
 			}
 		} catch (final Exception e) {
-			LOGGER.debug("Exception while disconnecting");
+			System.out.println("Exception while disconnecting");
 			logTracker.log("Exception while disconnecting");
 		}
 	}
@@ -252,18 +249,18 @@ public final class KuraMQTTClient implements IKuraMQTTClient {
 				this.connection.publish(channel, encoder.getBytes(), QoS.AT_MOST_ONCE, false, new Callback<Void>() {
 					@Override
 					public void onFailure(final Throwable throwable) {
-						LOGGER.debug("Impossible to publish message to channel " + channel);
+						System.out.println("Impossible to publish message to channel " + channel);
 						logTracker.log("Impossible to publish message to channel " + channel);
 					}
 
 					@Override
 					public void onSuccess(final Void aVoid) {
-						LOGGER.debug("Successfully published");
+						System.out.println("Successfully published");
 						logTracker.log("Successfully published");
 					}
 				});
 			} catch (final IOException e) {
-				LOGGER.debug("I/O Exception Occurred: " + e.getMessage());
+				System.out.println("I/O Exception Occurred: " + e.getMessage());
 				logTracker.log("I/O Exception Occurred: " + e.getMessage());
 			}
 		}
@@ -283,17 +280,17 @@ public final class KuraMQTTClient implements IKuraMQTTClient {
 		this.connection.listener(new Listener() {
 			@Override
 			public void onConnected() {
-				LOGGER.debug("Host connected");
+				System.out.println("Host connected");
 			}
 
 			@Override
 			public void onDisconnected() {
-				LOGGER.debug("Host disconnected");
+				System.out.println("Host disconnected");
 			}
 
 			@Override
 			public void onFailure(final Throwable throwable) {
-				LOGGER.debug("Exception Occurred: " + throwable.getMessage());
+				System.out.println("Exception Occurred: " + throwable.getMessage());
 			}
 
 			@Override
@@ -306,7 +303,7 @@ public final class KuraMQTTClient implements IKuraMQTTClient {
 								.processMessage(decoder.buildFromByteArray());
 					} catch (final IOException e) {
 						logTracker.log("I/O Exception Occurred: " + e.getMessage());
-						LOGGER.debug("I/O Exception Occurred: " + e.getMessage());
+						System.out.println("I/O Exception Occurred: " + e.getMessage());
 					}
 				}
 				ack.run();
@@ -318,14 +315,14 @@ public final class KuraMQTTClient implements IKuraMQTTClient {
 			@Override
 			public void onFailure(final Throwable throwable) {
 				KuraMQTTClient.this.errorMsg = "Impossible to CONNECT to the MQTT server, terminating";
-				LOGGER.debug(KuraMQTTClient.this.errorMsg);
+				System.out.println(KuraMQTTClient.this.errorMsg);
 				logTracker.log("Exception Occurred: " + throwable.getMessage());
 			}
 
 			@Override
 			public void onSuccess(final Void aVoid) {
 				l.countDown();
-				LOGGER.debug("Successfully Connected to Host");
+				System.out.println("Successfully Connected to Host");
 				logTracker.log("Successfully Connected to Host");
 			}
 
@@ -333,13 +330,13 @@ public final class KuraMQTTClient implements IKuraMQTTClient {
 		try {
 			if (!l.await(5, TimeUnit.SECONDS)) {
 				this.errorMsg = "Impossible to CONNECT to the MQTT server: TIMEOUT. Terminating";
-				LOGGER.debug(this.errorMsg);
+				System.out.println(this.errorMsg);
 				logTracker.log(this.errorMsg);
 				this.exceptionOccurred(this.errorMsg);
 			}
 		} catch (final InterruptedException e) {
 			this.errorMsg = "\"Impossible to CONNECT to the MQTT server, terminating\"";
-			LOGGER.debug(this.errorMsg);
+			System.out.println(this.errorMsg);
 			logTracker.log(this.errorMsg);
 			this.exceptionOccurred(this.errorMsg);
 		}
@@ -353,12 +350,12 @@ public final class KuraMQTTClient implements IKuraMQTTClient {
 			this.connection.disconnect(new Callback<Void>() {
 				@Override
 				public void onFailure(final Throwable throwable) {
-					LOGGER.debug("Error while disconnecting");
+					System.out.println("Error while disconnecting");
 				}
 
 				@Override
 				public void onSuccess(final Void aVoid) {
-					LOGGER.debug("Successfully disconnected");
+					System.out.println("Successfully disconnected");
 				}
 			});
 		}
@@ -376,7 +373,7 @@ public final class KuraMQTTClient implements IKuraMQTTClient {
 			this.connection.subscribe(topic, new Callback<byte[]>() {
 				@Override
 				public void onFailure(final Throwable throwable) {
-					LOGGER.debug("Impossible to SUBSCRIBE to channel \"" + channel + "\"");
+					System.out.println("Impossible to SUBSCRIBE to channel \"" + channel + "\"");
 					logTracker.log("Impossible to SUBSCRIBE to channel \"" + channel + "\"");
 					l.countDown();
 				}
@@ -386,13 +383,13 @@ public final class KuraMQTTClient implements IKuraMQTTClient {
 					KuraMQTTClient.this.channels.put(channel, callback);
 					l.countDown();
 					logTracker.log("Successfully subscribed to " + channel);
-					LOGGER.debug("Successfully subscribed to " + channel);
+					System.out.println("Successfully subscribed to " + channel);
 				}
 			});
 			try {
 				l.await();
 			} catch (final InterruptedException e) {
-				LOGGER.debug("Impossible to SUBSCRIBE to channel \"" + channel + "\"");
+				System.out.println("Impossible to SUBSCRIBE to channel \"" + channel + "\"");
 				logTracker.log("Impossible to SUBSCRIBE to channel \"" + channel + "\"");
 			}
 		}
@@ -413,13 +410,13 @@ public final class KuraMQTTClient implements IKuraMQTTClient {
 			this.connection.unsubscribe(topic, new Callback<Void>() {
 				@Override
 				public void onFailure(final Throwable throwable) {
-					LOGGER.debug("Exception occurred while unsubscribing: " + throwable.getMessage());
+					System.out.println("Exception occurred while unsubscribing: " + throwable.getMessage());
 					logTracker.log("Exception occurred while unsubscribing");
 				}
 
 				@Override
 				public void onSuccess(final Void aVoid) {
-					LOGGER.debug("Successfully unsubscribed");
+					System.out.println("Successfully unsubscribed");
 					logTracker.log("Successfully unsubscribed");
 				}
 			});

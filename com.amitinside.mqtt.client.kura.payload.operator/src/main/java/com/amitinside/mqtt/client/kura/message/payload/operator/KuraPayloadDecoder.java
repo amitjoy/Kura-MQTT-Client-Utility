@@ -18,9 +18,6 @@ package com.amitinside.mqtt.client.kura.message.payload.operator;
 import java.io.IOException;
 import java.util.Date;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.amitinside.mqtt.client.kura.message.KuraPayload;
 import com.amitinside.mqtt.client.kura.message.KuraPosition;
 import com.amitinside.mqtt.client.kura.message.payload.util.GZipUtil;
@@ -32,11 +29,6 @@ import com.google.protobuf.InvalidProtocolBufferException;
  * Decodes Kura EDC Payload encoded using Google Protocol Buffer
  */
 public class KuraPayloadDecoder {
-
-	/**
-	 * Logger
-	 */
-	private static final Logger s_logger = LoggerFactory.getLogger(KuraPayloadDecoder.class);
 
 	private byte[] m_bytes;
 
@@ -50,7 +42,7 @@ public class KuraPayloadDecoder {
 			try {
 				this.m_bytes = GZipUtil.decompress(this.m_bytes);
 			} catch (final IOException e) {
-				s_logger.info("Decompression failed");
+				System.out.println("Decompression failed");
 			}
 		}
 
@@ -78,8 +70,8 @@ public class KuraPayloadDecoder {
 						protoMsg.getMetric(i).getType());
 				kuraMsg.addMetric(name, value);
 			} catch (final Exception ihte) {
-				s_logger.warn("During deserialization, ignoring metric named: " + name + ". Unrecognized value type: "
-						+ protoMsg.getMetric(i).getType(), ihte);
+				System.err.println("During deserialization, ignoring metric named: " + name
+						+ ". Unrecognized value type: " + protoMsg.getMetric(i).getType() + ihte);
 			}
 		}
 

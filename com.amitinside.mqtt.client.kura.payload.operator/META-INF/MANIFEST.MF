@@ -8,5 +8,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ClassPath: .
 Import-Package: com.amitinside.mqtt.client.kura.message,
  com.amitinside.mqtt.client.kura.message.protobuf,
- com.google.protobuf, org.slf4j;version="1.7.2"
+ com.google.protobuf
 Export-Package: com.amitinside.mqtt.client.kura.message.payload.operator
