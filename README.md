@@ -1,3 +1,9 @@
+**README** #
+
+This MQTT Client Application facilitates with all the MQTT related operations while using Eclipse Kura for IoT Application development.
+
+The main motive of developing this application is to use Eclipse Kura's EDC Communication feature with Eurotech Everyware Cloud (or Eclipse Kapua) and CRUD like feature provided by CloudLet. This requires all the payloads to be encoded and decoded using Google Protocol Buffer. If we use any of the widely available MQTT Client Tools, we can only be able to use MQTT Payloads of simple string type. This utility application provides you with all the opportunities to encode and decode your provided payload on the fly.
+
 ![Screen Shot 2015-09-11 at 10.16.26 am.png](https://bitbucket.org/repo/LxLXp5/images/2297380048-Screen%20Shot%202015-09-11%20at%2010.16.26%20am.png)
 
 ![Screen Shot 2015-09-11 at 10.17.00 am.png](https://bitbucket.org/repo/LxLXp5/images/2812616646-Screen%20Shot%202015-09-11%20at%2010.17.00%20am.png)
@@ -16,21 +22,14 @@
 
 ![Screen Shot 2015-09-11 at 10.23.57 am.png](https://bitbucket.org/repo/LxLXp5/images/2148475110-Screen%20Shot%202015-09-11%20at%2010.23.57%20am.png)
 
-**README** #
-
-This MQTT Client Application facilitates with all the MQTT related operations while using Eclipse Kura for IoT Application development.
-
-The main motive of developing this application is to use Eclipse Kura's EDC Communication feature and CRUD like feature provided by CloudLet. This requires all the payloads to be encoded and decoded using Google Protocol Buffer. If we use any of the widely available MQTT Client Tools, we can only be able to use MQTT Payloads of simple string type. This utility application provides you with all the opportunities to encode and decode your provided payload on the fly.
-
 ### **What is this repository for?** ###
 
 * E4 Application source for Kura MQTT Client Utility
-* 1.2.0
+* 1.3.0
 
 ### **How do I get set up?** ###
 
-* Download Eclipse for RCP and RAP Developers from **http://www.eclipse.org/downloads/packages/eclipse-rcp-and-rap-developers/marsr**
-* Extract the compressed file and run Eclipse
+* Download Eclipse Neon for **RCP and RAP** Developers from **http://www.eclipse.org/downloads**
 * Download all the projects and import all of them into your workspace
 * Double click on **com.amitinside.mqtt.client.kura.product** placed under **com.amitinside.mqtt.client.kura.product** project
 * Then click on **Launch an Eclipse Application**
