@@ -29,7 +29,11 @@ import static com.amitinside.swt.layout.grid.GridDataUtil.applyGridData;
 import static org.eclipse.jface.dialogs.MessageDialog.openError;
 import static org.mihalis.opal.utils.SWTGraphicUtil.centerShell;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
+import java.util.Enumeration;
+import java.util.Properties;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -62,6 +66,19 @@ import com.amitinside.mqtt.client.kura.message.KuraPayload;
 public final class PublishPart {
 
 	private static IKuraMQTTClient mqttClient;
+
+	public static Properties parsePropertiesString(final String s) {
+		// grr at load() returning void rather than the Properties object
+		// so this takes 3 lines instead of "return new Properties().load(...);"
+		final Properties p = new Properties();
+		try {
+			p.load(new StringReader(s));
+		} catch (final IOException e) {
+			e.printStackTrace();
+		}
+		return p;
+	}
+
 	private final IEventBroker broker;
 	private final IBundleResourceLoader bundleResourceService;
 	private Button buttonPublish;
@@ -74,6 +91,7 @@ public final class PublishPart {
 	private Text textSubscribeTopicHint;
 	private Text textTopic;
 	private final UISynchronize uiSynchronize;
+
 	private final MWindow window;
 
 	@Inject
@@ -164,10 +182,18 @@ public final class PublishPart {
 				if ((PublishPart.this.textPublishMetric != null)
 						&& !"".equals(PublishPart.this.textPublishMetric.getText())) {
 					final String inputText = PublishPart.this.textPublishMetric.getText();
+					Properties properties = null;
 					try {
-						payload.setBody(inputText.getBytes("UTF-8"));
+						properties = parsePropertiesString(new String(inputText.getBytes("UTF-8")));
 					} catch (final UnsupportedEncodingException e1) {
 						e1.printStackTrace();
+					}
+					if (properties != null) {
+						final Enumeration<?> enumeration = properties.propertyNames();
+						while (enumeration.hasMoreElements()) {
+							final String key = (String) enumeration.nextElement();
+							payload.addMetric(key, properties.get(key));
+						}
 					}
 				}
 				mqttClient.publish(PublishPart.this.textTopic.getText(), payload);
