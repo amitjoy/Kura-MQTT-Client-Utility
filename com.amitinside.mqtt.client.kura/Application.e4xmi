@@ -29,6 +29,7 @@
     <properties key="mosquitto_broker" value="test.mosquitto.org"/>
     <properties key="mqttdashboard" value="broker.mqttdashboard.com"/>
     <properties key="m2m_eclipse" value="m2m.eclipse.org"/>
+    <properties key="everyware_cloud" value="broker-sandbox.everyware-cloud.com"/>
   </children>
   <handlers xmi:id="_6ctgTd7uEeSi-LhyoCOjzA" elementId="com.amitinside.mqtt.client.kura.handler.quitCommand" contributionURI="bundleclass://com.amitinside.mqtt.client.kura/com.amitinside.mqtt.client.kura.handlers.QuitHandler" command="_6ctgTN7uEeSi-LhyoCOjzA"/>
   <handlers xmi:id="_6ctgV97uEeSi-LhyoCOjzA" elementId="com.amitinside.mqtt.client.kura.handler.aboutCommand" contributionURI="bundleclass://com.amitinside.mqtt.client.kura/com.amitinside.mqtt.client.kura.handlers.AboutHandler" command="_6ctgVt7uEeSi-LhyoCOjzA"/>
@@ -37,7 +38,7 @@
     <bindings xmi:id="_6ctgT97uEeSi-LhyoCOjzA" keySequence="M1+Q" command="_6ctgTN7uEeSi-LhyoCOjzA"/>
     <bindings xmi:id="_6ctgUt7uEeSi-LhyoCOjzA" keySequence="M1+O"/>
     <bindings xmi:id="_6ctgVd7uEeSi-LhyoCOjzA" keySequence="M1+S"/>
-    <bindings xmi:id="_6ctgWN7uEeSi-LhyoCOjzA" keySequence="M1+A" command="_6ctgVt7uEeSi-LhyoCOjzA"/>
+    <bindings xmi:id="_6ctgWN7uEeSi-LhyoCOjzA" keySequence="M1+I" command="_6ctgVt7uEeSi-LhyoCOjzA"/>
   </bindingTables>
   <rootContext xmi:id="_6ctgSd7uEeSi-LhyoCOjzA" elementId="org.eclipse.ui.contexts.dialogAndWindow" name="In Dialog and Windows">
     <children xmi:id="_6ctgSt7uEeSi-LhyoCOjzA" elementId="org.eclipse.ui.contexts.window" name="In Windows"/>

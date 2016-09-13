@@ -50,6 +50,7 @@ public final class ConnectionSettingsDialog extends TitleAreaDialog {
 	private static final String DEFAULT_MQTT_PORT = "1883";
 
 	private static String eclipseServer = "";
+	private static String edcServer = "";
 	private static String m2mEclipse = "";
 	private static String mosquittoServer = "";
 
@@ -132,6 +133,7 @@ public final class ConnectionSettingsDialog extends TitleAreaDialog {
 		mosquittoServer = (String) window.getContext().get("mosquitto_broker");
 		mqttDashboardServer = (String) window.getContext().get("mqttdashboard");
 		m2mEclipse = (String) window.getContext().get("m2m_eclipse");
+		edcServer = (String) window.getContext().get("everyware_cloud");
 	}
 
 	private final IEventBroker broker;
@@ -254,7 +256,7 @@ public final class ConnectionSettingsDialog extends TitleAreaDialog {
 		this.helpServersCombo = new Combo(container, SWT.READ_ONLY);
 		this.helpServersCombo.setBounds(50, 50, 150, 65);
 		final String items[] = { "-- Select Test Broker --", eclipseServer, mosquittoServer, mqttDashboardServer,
-				m2mEclipse };
+				m2mEclipse, edcServer };
 		this.helpServersCombo.setItems(items);
 		this.helpServersCombo.select(0);
 		this.helpServersCombo.addSelectionListener(new SelectionAdapter() {
@@ -272,6 +274,9 @@ public final class ConnectionSettingsDialog extends TitleAreaDialog {
 					break;
 				case 4:
 					txtMqttServerAddress.setText(m2mEclipse);
+					break;
+				case 5:
+					txtMqttServerAddress.setText(edcServer);
 					break;
 				default:
 					break;
