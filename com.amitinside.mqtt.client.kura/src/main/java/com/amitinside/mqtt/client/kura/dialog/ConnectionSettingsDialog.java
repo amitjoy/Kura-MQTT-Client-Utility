@@ -211,7 +211,7 @@ public final class ConnectionSettingsDialog extends TitleAreaDialog {
 		final Label lbtMQTTServerPassword = new Label(container, SWT.NONE);
 		lbtMQTTServerPassword.setText("Password");
 
-		txtMqttServerPassword = new Text(container, SWT.BORDER);
+		txtMqttServerPassword = new Text(container, SWT.PASSWORD | SWT.BORDER);
 		txtMqttServerPassword.setMessage("MQTT Server Password");
 
 		if ((mqttServerPassword != null) && !"".equals(mqttServerPassword)) {
