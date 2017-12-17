@@ -1,4 +1,4 @@
-**README** #
+**README**
 
 This MQTT Client Application facilitates with all the MQTT related operations while using Eclipse Kura for IoT Application development.
 
