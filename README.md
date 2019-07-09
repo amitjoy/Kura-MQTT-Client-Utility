@@ -27,7 +27,7 @@ The main motive of developing this application is to use Eclipse Kura's EDC Comm
 * E4 Application source for Kura MQTT Client Utility
 * 1.3.0
 
-### **How do I get set up?** ###
+### **How can I set it up?** ###
 
 * Download Eclipse Neon for **RCP and RAP** Developers from **http://www.eclipse.org/downloads**
 * Download all the projects and import all of them into your workspace
