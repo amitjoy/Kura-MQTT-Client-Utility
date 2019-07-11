@@ -22,7 +22,7 @@ The main motive of developing this application is to use Eclipse Kura's EDC Comm
 
 ![Screen Shot 2015-09-11 at 10.23.57 am.png](https://bitbucket.org/repo/LxLXp5/images/2148475110-Screen%20Shot%202015-09-11%20at%2010.23.57%20am.png)
 
-### **What is this repository for?** ###
+### **What is this repository for?** ###. 
 
 * E4 Application source for Kura MQTT Client Utility
 * 1.3.0
