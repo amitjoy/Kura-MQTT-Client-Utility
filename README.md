@@ -33,7 +33,7 @@ The primary motive of developing this application is to use Eclipse Kura's EDC C
 * Download all the projects and import all of them into your workspace
 * Double click on **com.amitinside.mqtt.client.kura.product** placed under **com.amitinside.mqtt.client.kura.product** project
 * Then click on **Launch an Eclipse Application**
-* Now you are good to go.
+* Now you are good to go
 
 ### **Who do I talk to?** ###
 
