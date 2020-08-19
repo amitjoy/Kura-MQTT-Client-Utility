@@ -1,6 +1,6 @@
 **README**
 
-This MQTT client application facilitates with all MQTT related operations while using Eclipse Kura for IoT application development.
+This MQTT client application facilitates with all MQTT related operations while using Eclipse Kura for the IoT application development.
 
 The primary motive of developing this application is to use Eclipse Kura's EDC Communication feature with Eurotech Everyware Cloud (or Eclipse Kapua) and CRUD like feature provided by CloudLet. This requires all the payloads to be encoded and decoded using Google Protocol Buffer. If we use any of the widely available MQTT Client Tools, we can only be able to use MQTT Payloads of simple string type. This utility application provides you with all the opportunities to encode and decode your provided payload on the fly.   
 
