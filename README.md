@@ -22,11 +22,6 @@ The primary motive of developing this application is to use Eclipse Kura's EDC C
 
 ![Screen Shot 2015-09-11 at 10.23.57 am.png](https://bitbucket.org/repo/LxLXp5/images/2148475110-Screen%20Shot%202015-09-11%20at%2010.23.57%20am.png)
 
-### **What is this repository for?** ###. 
-
-* E4 Application source for Kura MQTT client utility
-* 1.3.0
-
 ### **How can I set it up?** ###
 
 * Download Eclipse Neon for **RCP and RAP** Developers from **http://www.eclipse.org/downloads**
