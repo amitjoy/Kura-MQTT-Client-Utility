@@ -24,7 +24,7 @@ The primary motive of developing this application is to use Eclipse Kura's EDC C
 
 ### **How can I set it up?** ###
 
-* Download Eclipse Neon for **RCP and RAP** Developers from **http://www.eclipse.org/downloads**
+* Download Eclipse for **RCP and RAP** Developers from **http://www.eclipse.org/downloads**
 * Download all the projects and import all of them into your workspace
 * Double click on **com.amitinside.mqtt.client.kura.product** placed under **com.amitinside.mqtt.client.kura.product** project
 * Then click on **Launch an Eclipse Application**
