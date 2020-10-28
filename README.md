@@ -22,7 +22,7 @@ The primary motive of developing this application is to enable usage of Eclipse 
 
 ![Screen Shot 2015-09-11 at 10.23.57 am.png](https://bitbucket.org/repo/LxLXp5/images/2148475110-Screen%20Shot%202015-09-11%20at%2010.23.57%20am.png)
 
-### **How can I set it up?** ###
+### **How to set up?** ###
 
 * Download Eclipse for **RCP and RAP** Developers from **http://www.eclipse.org/downloads**
 * Download all the projects and import all of them into your workspace
