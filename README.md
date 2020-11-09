@@ -30,6 +30,6 @@ The primary motive of developing the application is to enable usage of Eclipse K
 * Then click on **Launch an Eclipse Application**
 * Now you are good to go
 
-### **Who do I talk to?** ###
+### **Who should I talk to?** ###
 
 * admin@amitinside.com
